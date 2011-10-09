@@ -5,7 +5,7 @@ author: robinjam
 depend: [WorldEdit]
 
 commands:
-  ports:
+  port:
     description: Provides access to Ports commands
     usage: /<command>
 
@@ -17,4 +17,4 @@ permissions:
       ports.reload: true
       
   ports.reload:
-    description: Allows you to use /ports reload
+    description: Allows you to use /port reload

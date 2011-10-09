@@ -40,7 +40,7 @@ public class Ports extends JavaPlugin {
         
         // Register commands
         commandManager = new CommandManager();
-        this.getCommand("ports").setExecutor(commandManager);
+        this.getCommand("port").setExecutor(commandManager);
         commandManager.registerCommand("reload", new ReloadCommand(this));
         
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
