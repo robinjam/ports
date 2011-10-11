@@ -17,12 +17,16 @@ permissions:
     children:
       ports.reload: true
       ports.create: true
+      ports.delete: true
       
   ports.reload:
     description: Allows you to use /port reload
   
   ports.create:
     description: Allows you to use /port create
+  
+  ports.delete:
+    description: Allows you to use /port delete
   
   ports.list:
     description: Allows you to use /port list
