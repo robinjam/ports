@@ -22,6 +22,7 @@ permissions:
       ports.arrive: true
       ports.update: true
       ports.dispatch: true
+      ports.describe: true
       
   ports.reload:
     description: Allows you to use /port reload
@@ -43,6 +44,9 @@ permissions:
   
   ports.dispatch:
     description: Allows you to use /port dispatch
+  
+  ports.describe:
+    description: Allows you to use /port describe
   
   ports.list:
     description: Allows you to use /port list
