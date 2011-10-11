@@ -95,7 +95,7 @@ public class Port implements Serializable {
     }
     
     public void setDestination(Port destination) {
-        this.destinationId = destination.id;
+        setDestinationId(destination.getId());
     }
     
     public void setDispatchSchedule(int dispatchSchedule) {
