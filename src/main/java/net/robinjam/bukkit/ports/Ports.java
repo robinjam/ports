@@ -4,8 +4,14 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
+import net.robinjam.bukkit.ports.commands.CreateCommand;
+import net.robinjam.bukkit.ports.commands.ListCommand;
 import net.robinjam.bukkit.ports.commands.ReloadCommand;
+import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandManager;
 import net.robinjam.bukkit.util.Configuration;
 import org.bukkit.plugin.Plugin;
@@ -34,6 +40,9 @@ public class Ports extends JavaPlugin {
         // Hook into WorldEdit
         this.hookWorldEdit();
         
+        // Set up database
+        this.setupDatabase();
+        
         // Register events
 //      PluginManager pm = getServer().getPluginManager();
 //      pm.registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, playerListener, Event.Priority.Normal, this);
@@ -42,6 +51,8 @@ public class Ports extends JavaPlugin {
         commandManager = new CommandManager();
         this.getCommand("port").setExecutor(commandManager);
         commandManager.registerCommand("reload", new ReloadCommand(this));
+        commandManager.registerCommand("list", new ListCommand(this));
+        commandManager.registerCommand("create", new CreateCommand(this));
         
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
     }
@@ -67,6 +78,26 @@ public class Ports extends JavaPlugin {
     private void hookWorldEdit() {
         Plugin plugin = this.getServer().getPluginManager().getPlugin("WorldEdit");
         this.worldEdit = ((WorldEditPlugin)plugin).getWorldEdit();
+    }
+    
+    public WorldEdit getWorldEdit() {
+        return this.worldEdit;
+    }
+    
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        List<Class<?>> list = new ArrayList<Class<?>>();
+        list.add(Port.class);
+        return list;
+    }
+
+    private void setupDatabase() {
+        try {
+            getDatabase().find(Port.class).findRowCount();
+        } catch (PersistenceException ex) {
+            logger.info(String.format("[%s] Creating database", pdf.getName()));
+            installDDL();
+        }
     }
     
 }

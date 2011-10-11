@@ -3,6 +3,7 @@ main: net.robinjam.bukkit.ports.Ports
 version: ${project.version}
 author: robinjam
 depend: [WorldEdit]
+database: true
 
 commands:
   port:
@@ -15,6 +16,14 @@ permissions:
     default: op
     children:
       ports.reload: true
+      ports.create: true
       
   ports.reload:
     description: Allows you to use /port reload
+  
+  ports.create:
+    description: Allows you to use /port create
+  
+  ports.list:
+    description: Allows you to use /port list
+    default: true
