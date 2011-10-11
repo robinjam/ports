@@ -12,6 +12,7 @@ import net.robinjam.bukkit.ports.commands.CreateCommand;
 import net.robinjam.bukkit.ports.commands.DeleteCommand;
 import net.robinjam.bukkit.ports.commands.ListCommand;
 import net.robinjam.bukkit.ports.commands.ReloadCommand;
+import net.robinjam.bukkit.ports.commands.SelectCommand;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandManager;
 import net.robinjam.bukkit.util.Configuration;
@@ -28,7 +29,7 @@ public class Ports extends JavaPlugin {
     private Configuration config;
     private PluginDescriptionFile pdf;
     private CommandManager commandManager;
-    private WorldEdit worldEdit;
+    private WorldEditPlugin worldEditPlugin;
     private static final Logger logger = Logger.getLogger("Minecraft");
 
     public void onEnable() {
@@ -55,6 +56,7 @@ public class Ports extends JavaPlugin {
         commandManager.registerCommand("list", new ListCommand(this));
         commandManager.registerCommand("create", new CreateCommand(this));
         commandManager.registerCommand("delete", new DeleteCommand(this));
+        commandManager.registerCommand("select", new SelectCommand(this));
         
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
     }
@@ -79,11 +81,15 @@ public class Ports extends JavaPlugin {
     
     private void hookWorldEdit() {
         Plugin plugin = this.getServer().getPluginManager().getPlugin("WorldEdit");
-        this.worldEdit = ((WorldEditPlugin)plugin).getWorldEdit();
+        this.worldEditPlugin = (WorldEditPlugin) plugin;
+    }
+    
+    public WorldEditPlugin getWorldEditPlugin() {
+        return this.worldEditPlugin;
     }
     
     public WorldEdit getWorldEdit() {
-        return this.worldEdit;
+        return this.worldEditPlugin.getWorldEdit();
     }
     
     @Override
