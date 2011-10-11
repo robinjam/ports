@@ -1,6 +1,8 @@
 package net.robinjam.bukkit.ports.persistence;
 
+import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.validation.NotEmpty;
+import com.avaje.ebean.validation.NotNull;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import java.io.Serializable;
@@ -17,6 +19,9 @@ import org.bukkit.Location;
 public class Port implements Serializable {
     
     @Id
+    @NotNull
+    private int id;
+    
     @NotEmpty
     private String name;
     
@@ -31,7 +36,7 @@ public class Port implements Serializable {
     private double x, y, z;
     private float yaw, pitch;
     
-    //private Port destination;
+    private int destinationId;
     
     private int dispatchSchedule;
     
@@ -53,9 +58,9 @@ public class Port implements Serializable {
         return new Location(Bukkit.getWorld(getWorld()), getX(), getY(), getZ(), getYaw(), getPitch());
     }
     
-    //public Port getDestination() {
-        
-    //}
+    public Port getDestination(EbeanServer server) {
+        return server.find(Port.class).where().eq("id", destinationId).findUnique();
+    }
     
     public int getDispatchSchedule() {
         return dispatchSchedule;
@@ -89,9 +94,9 @@ public class Port implements Serializable {
         setPitch(arrivalLocation.getPitch());
     }
     
-    //public void setDestination(Port destination) {
-        
-    //}
+    public void setDestination(Port destination) {
+        this.destinationId = destination.id;
+    }
     
     public void setDispatchSchedule(int dispatchSchedule) {
         this.dispatchSchedule = dispatchSchedule;
@@ -192,6 +197,22 @@ public class Port implements Serializable {
 
     public void setPitch(float pitch) {
         this.pitch = pitch;
+    }
+
+    public int getDestinationId() {
+        return destinationId;
+    }
+
+    public void setDestinationId(int destinationId) {
+        this.destinationId = destinationId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
 }
