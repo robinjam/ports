@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 import net.robinjam.bukkit.ports.commands.ArriveCommand;
 import net.robinjam.bukkit.ports.commands.CreateCommand;
 import net.robinjam.bukkit.ports.commands.DeleteCommand;
+import net.robinjam.bukkit.ports.commands.DispatchCommand;
 import net.robinjam.bukkit.ports.commands.ListCommand;
 import net.robinjam.bukkit.ports.commands.ReloadCommand;
 import net.robinjam.bukkit.ports.commands.SelectCommand;
@@ -61,6 +62,7 @@ public class Ports extends JavaPlugin {
         commandManager.registerCommand("select", new SelectCommand(this));
         commandManager.registerCommand("arrive", new ArriveCommand(this));
         commandManager.registerCommand("update", new UpdateCommand(this));
+        commandManager.registerCommand("dispatch", new DispatchCommand(this));
         
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
     }
