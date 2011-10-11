@@ -19,6 +19,7 @@ permissions:
       ports.create: true
       ports.delete: true
       ports.select: true
+      ports.arrive: true
       
   ports.reload:
     description: Allows you to use /port reload
@@ -31,6 +32,9 @@ permissions:
   
   ports.select:
     description: Allows you to use /port select
+  
+  ports.arrive:
+    description: Allows you to use /port arrive
   
   ports.list:
     description: Allows you to use /port list
