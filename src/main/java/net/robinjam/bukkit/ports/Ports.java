@@ -14,6 +14,7 @@ import net.robinjam.bukkit.ports.commands.DeleteCommand;
 import net.robinjam.bukkit.ports.commands.ListCommand;
 import net.robinjam.bukkit.ports.commands.ReloadCommand;
 import net.robinjam.bukkit.ports.commands.SelectCommand;
+import net.robinjam.bukkit.ports.commands.UpdateCommand;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandManager;
 import net.robinjam.bukkit.util.Configuration;
@@ -59,6 +60,7 @@ public class Ports extends JavaPlugin {
         commandManager.registerCommand("delete", new DeleteCommand(this));
         commandManager.registerCommand("select", new SelectCommand(this));
         commandManager.registerCommand("arrive", new ArriveCommand(this));
+        commandManager.registerCommand("update", new UpdateCommand(this));
         
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
     }
