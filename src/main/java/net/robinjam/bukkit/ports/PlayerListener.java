@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import net.robinjam.bukkit.ports.persistence.Port;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -55,8 +53,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
     }
     
     private void onPlayerEnterPort(Player player, Port port) {
-        Port destination = port.getDestination(plugin.getDatabase());
-        if (destination == null) {
+        if (port.getDestination() == null) {
             player.sendMessage(ChatColor.YELLOW + "This " + port.getDescription() + " has no destination!");
         } else {
             if (port.getDepartureSchedule() > 0) {

@@ -121,11 +121,13 @@ public class Ports extends JavaPlugin {
         } catch (PersistenceException ex) {
             logger.info(String.format("[%s] Creating database", pdf.getName()));
             installDDL();
+        } finally {
+            Port.setPlugin(this);
         }
     }
     
     public void teleportPlayer(Player player, Port port) {
-        player.teleport(port.getDestination(getDatabase()).getArrivalLocation());
+        player.teleport(port.getDestination().getArrivalLocation());
         World world = player.getWorld();
         Chunk chunk = world.getChunkAt(player.getLocation());
         world.refreshChunk(chunk.getX(), chunk.getZ());

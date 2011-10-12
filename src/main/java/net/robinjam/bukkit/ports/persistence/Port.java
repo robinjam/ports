@@ -8,6 +8,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import net.robinjam.bukkit.ports.Ports;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -17,6 +18,8 @@ import org.bukkit.Location;
  */
 @Entity()
 public class Port implements Serializable {
+    
+    private static Ports plugin;
     
     @Id
     @NotNull
@@ -40,6 +43,10 @@ public class Port implements Serializable {
     
     private int departureSchedule;
     
+    public static void setPlugin(Ports plugin) {
+        Port.plugin = plugin;
+    }
+    
     public String getName() {
         return name;
     }
@@ -58,8 +65,8 @@ public class Port implements Serializable {
         return new Location(Bukkit.getWorld(getWorld()), getX(), getY(), getZ(), getYaw(), getPitch());
     }
     
-    public Port getDestination(EbeanServer server) {
-        return server.find(Port.class).where().eq("id", destinationId).findUnique();
+    public Port getDestination() {
+        return plugin.getDatabase().find(Port.class).where().eq("id", destinationId).findUnique();
     }
     
     public int getDepartureSchedule() {
