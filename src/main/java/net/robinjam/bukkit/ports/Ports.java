@@ -8,22 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
-import net.robinjam.bukkit.ports.commands.ArriveCommand;
-import net.robinjam.bukkit.ports.commands.CreateCommand;
-import net.robinjam.bukkit.ports.commands.DeleteCommand;
-import net.robinjam.bukkit.ports.commands.DescribeCommand;
-import net.robinjam.bukkit.ports.commands.DestinationCommand;
-import net.robinjam.bukkit.ports.commands.DispatchCommand;
-import net.robinjam.bukkit.ports.commands.LinkCommand;
-import net.robinjam.bukkit.ports.commands.ListCommand;
-import net.robinjam.bukkit.ports.commands.ReloadCommand;
-import net.robinjam.bukkit.ports.commands.SelectCommand;
-import net.robinjam.bukkit.ports.commands.UpdateCommand;
+import net.robinjam.bukkit.ports.commands.*;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandManager;
 import net.robinjam.bukkit.util.Configuration;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -36,6 +33,9 @@ public class Ports extends JavaPlugin {
     private PluginDescriptionFile pdf;
     private CommandManager commandManager;
     private WorldEditPlugin worldEditPlugin;
+    private PlayerListener playerListener = new PlayerListener(this);
+    private TicketManager ticketManager = new TicketManager(this);
+    
     private static final Logger logger = Logger.getLogger("Minecraft");
 
     public void onEnable() {
@@ -52,8 +52,9 @@ public class Ports extends JavaPlugin {
         this.setupDatabase();
         
         // Register events
-//      PluginManager pm = getServer().getPluginManager();
-//      pm.registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, playerListener, Event.Priority.Normal, this);
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
+        pm.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
         
         // Register commands
         commandManager = new CommandManager();
@@ -70,11 +71,14 @@ public class Ports extends JavaPlugin {
         commandManager.registerCommand("destination", new DestinationCommand(this));
         commandManager.registerCommand("link", new LinkCommand(this));
         
+        // Schedule ticket manager
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, ticketManager, 0L, 100L);
+        
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
     }
     
     public void onDisable() {
-        // Do nothing
+        getServer().getScheduler().cancelTasks(this);
     }
 
     public void reload() {
@@ -118,6 +122,18 @@ public class Ports extends JavaPlugin {
             logger.info(String.format("[%s] Creating database", pdf.getName()));
             installDDL();
         }
+    }
+    
+    public void teleportPlayer(Player player, Port port) {
+        player.teleport(port.getDestination(getDatabase()).getArrivalLocation());
+        World world = player.getWorld();
+        Chunk chunk = world.getChunkAt(player.getLocation());
+        world.refreshChunk(chunk.getX(), chunk.getZ());
+        player.sendMessage(ChatColor.AQUA + "Whoosh!");
+    }
+    
+    public TicketManager getTicketManager() {
+        return ticketManager;
     }
     
 }

@@ -215,4 +215,10 @@ public class Port implements Serializable {
         this.id = id;
     }
     
+
+    public boolean contains(Location location) {
+        Vector pt = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return getActivationRegion().contains(pt);
+    }
+    
 }
