@@ -102,7 +102,10 @@ public class Port implements Serializable {
     }
     
     public void setDestination(Port destination) {
-        setDestinationId(destination.getId());
+        if (destination == null)
+            setDestinationId(0);
+        else
+            setDestinationId(destination.getId());
     }
     
     public void setDepartureSchedule(int departureSchedule) {

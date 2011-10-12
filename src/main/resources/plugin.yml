@@ -25,6 +25,7 @@ permissions:
       ports.describe: true
       ports.destination: true
       ports.link: true
+      ports.unlink: true
       
   ports.reload:
     description: Allows you to use /port reload
@@ -55,6 +56,9 @@ permissions:
   
   ports.link:
     description: Allows you to use /port link
+  
+  ports.unlink:
+    description: Allows you to use /port unlink
   
   ports.list:
     description: Allows you to use /port list

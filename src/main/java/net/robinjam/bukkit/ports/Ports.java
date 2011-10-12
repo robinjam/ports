@@ -70,6 +70,7 @@ public class Ports extends JavaPlugin {
         commandManager.registerCommand("describe", new DescribeCommand(this));
         commandManager.registerCommand("destination", new DestinationCommand(this));
         commandManager.registerCommand("link", new LinkCommand(this));
+        commandManager.registerCommand("unlink", new UnlinkCommand(this));
         
         // Schedule ticket manager
         getServer().getScheduler().scheduleSyncRepeatingTask(this, ticketManager, 0L, 100L);
