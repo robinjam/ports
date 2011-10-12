@@ -61,8 +61,14 @@ public class TicketManager implements Runnable {
                 }
             }
             
-            if (!teleported)
-                player.sendMessage(ChatColor.AQUA + "This " + port.getDescription() + " will depart in " + (port.getDispatchSchedule() - newTime % port.getDispatchSchedule()));
+            if (!teleported) {
+                long t = (port.getDispatchSchedule() - newTime % port.getDispatchSchedule());
+                long d = t / 24000;
+                long h = (t % 24000) / 1000;
+                long m = ((t % 24000) % 1000) / 16;
+                String nextDeparture = String.format("[%dd %dh %dm]", d, h, m);
+                player.sendMessage(ChatColor.AQUA + "This " + port.getDescription() + " will depart in " + nextDeparture);
+            }
         }
     }
     
