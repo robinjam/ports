@@ -20,14 +20,19 @@ public class DescribeCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length != 3) {
+        if (args.length < 3) {
             sender.sendMessage(ChatColor.YELLOW + String.format("Usage: /%s describe [name] [description]", label));
         } else if (!sender.hasPermission("ports.describe")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission.");
         } else {
             String name = args[1];
-            String description = args[2];
-            Port port = plugin.getDatabase().find(Port.class).where("name = :name").setParameter("name", name).findUnique();
+            String description = "";
+            for (int x = 2; x < args.length; x++) {
+                description += args[x];
+                if (x < args.length - 1)
+                    description += " ";
+            }
+            Port port = plugin.getDatabase().find(Port.class).where().ieq("name", name).findUnique();
             
             if (port == null) {
                 sender.sendMessage(ChatColor.RED + "There is no such port.");
