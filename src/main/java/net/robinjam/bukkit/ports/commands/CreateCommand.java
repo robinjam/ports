@@ -36,7 +36,7 @@ public class CreateCommand implements CommandExecutor {
         } else {
             String name = args[1];
             
-            if (plugin.getDatabase().find(Port.class).where("name = :name").setParameter("name", name).findRowCount() > 0) {
+            if (plugin.getDatabase().find(Port.class).where().ieq("name", name).findRowCount() > 0) {
                 sender.sendMessage(ChatColor.RED + "There is already a port with that name. Please pick a unique name.");
                 return true;
             }
