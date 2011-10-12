@@ -66,7 +66,7 @@ public class Ports extends JavaPlugin {
         commandManager.registerCommand("select", new SelectCommand(this));
         commandManager.registerCommand("arrive", new ArriveCommand(this));
         commandManager.registerCommand("update", new UpdateCommand(this));
-        commandManager.registerCommand("dispatch", new DispatchCommand(this));
+        commandManager.registerCommand("schedule", new ScheduleCommand(this));
         commandManager.registerCommand("describe", new DescribeCommand(this));
         commandManager.registerCommand("destination", new DestinationCommand(this));
         commandManager.registerCommand("link", new LinkCommand(this));

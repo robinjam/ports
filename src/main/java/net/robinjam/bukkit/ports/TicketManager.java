@@ -60,14 +60,14 @@ public class TicketManager implements Runnable {
             
             boolean teleported = false;
             for (long x = previousTime; x <= newTime; x++) {
-                if (x % port.getDispatchSchedule() == 0) {
+                if (x % port.getDepartureSchedule() == 0) {
                     plugin.teleportPlayer(player, port);
                     teleported = true;
                 }
             }
             
             if (!teleported) {
-                long t = (port.getDispatchSchedule() - newTime % port.getDispatchSchedule());
+                long t = (port.getDepartureSchedule() - newTime % port.getDepartureSchedule());
                 long d = t / 24000;
                 long h = (t % 24000) / 1000;
                 long m = ((t % 24000) % 1000) / 16;

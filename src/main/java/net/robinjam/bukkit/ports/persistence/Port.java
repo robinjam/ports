@@ -38,7 +38,7 @@ public class Port implements Serializable {
     
     private int destinationId;
     
-    private int dispatchSchedule;
+    private int departureSchedule;
     
     public String getName() {
         return name;
@@ -62,8 +62,8 @@ public class Port implements Serializable {
         return server.find(Port.class).where().eq("id", destinationId).findUnique();
     }
     
-    public int getDispatchSchedule() {
-        return dispatchSchedule;
+    public int getDepartureSchedule() {
+        return departureSchedule;
     }
     
     public void setName(String name) {
@@ -98,8 +98,8 @@ public class Port implements Serializable {
         setDestinationId(destination.getId());
     }
     
-    public void setDispatchSchedule(int dispatchSchedule) {
-        this.dispatchSchedule = dispatchSchedule;
+    public void setDepartureSchedule(int departureSchedule) {
+        this.departureSchedule = departureSchedule;
     }
     
 

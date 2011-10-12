@@ -21,7 +21,7 @@ permissions:
       ports.select: true
       ports.arrive: true
       ports.update: true
-      ports.dispatch: true
+      ports.schedule: true
       ports.describe: true
       ports.destination: true
       ports.link: true
@@ -44,8 +44,8 @@ permissions:
   ports.update:
     description: Allows you to use /port update
   
-  ports.dispatch:
-    description: Allows you to use /port dispatch
+  ports.schedule:
+    description: Allows you to use /port schedule
   
   ports.describe:
     description: Allows you to use /port describe

@@ -11,43 +11,43 @@ import org.bukkit.command.CommandSender;
  *
  * @author robinjam
  */
-public class DispatchCommand implements CommandExecutor {
+public class ScheduleCommand implements CommandExecutor {
     
     private final Ports plugin;
 
-    public DispatchCommand(final Ports plugin) {
+    public ScheduleCommand(final Ports plugin) {
         this.plugin = plugin;
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 3) {
-            sender.sendMessage(ChatColor.YELLOW + String.format("Usage: /%s dispatch [name] [schedule]", label));
-        } else if (!sender.hasPermission("ports.dispatch")) {
+            sender.sendMessage(ChatColor.YELLOW + String.format("Usage: /%s schedule [name] [schedule]", label));
+        } else if (!sender.hasPermission("ports.schedule")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission.");
         } else {
             String name = args[1];
-            int dispatchSchedule;
+            int departureSchedule;
             
             try {
-                dispatchSchedule = Integer.parseInt(args[2]);
+                departureSchedule = Integer.parseInt(args[2]);
             } catch (Exception ex) {
-                sender.sendMessage(ChatColor.RED + "Dispatch schedule must be a number.");
+                sender.sendMessage(ChatColor.RED + "Departure schedule must be a number.");
                 return true;
             }
             
-            if (dispatchSchedule < 0) {
-                sender.sendMessage(ChatColor.RED + "Dispatch schedule must be positive.");
+            if (departureSchedule < 0) {
+                sender.sendMessage(ChatColor.RED + "Departure schedule must be positive.");
                 return true;
             }
             
-            Port port = plugin.getDatabase().find(Port.class).where("name = :name").setParameter("name", name).findUnique();
+            Port port = plugin.getDatabase().find(Port.class).where().ieq("name", name).findUnique();
             
             if (port == null) {
                 sender.sendMessage(ChatColor.RED + "There is no such port.");
             } else {
-                port.setDispatchSchedule(dispatchSchedule);
+                port.setDepartureSchedule(departureSchedule);
                 plugin.getDatabase().update(port);
-                sender.sendMessage(ChatColor.AQUA + "Dispatch schedule updated.");
+                sender.sendMessage(ChatColor.AQUA + "Departure schedule updated.");
             }
         }
         

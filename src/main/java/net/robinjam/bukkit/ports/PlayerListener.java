@@ -59,7 +59,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         if (destination == null) {
             player.sendMessage(ChatColor.YELLOW + "This " + port.getDescription() + " has no destination!");
         } else {
-            if (port.getDispatchSchedule() > 0) {
+            if (port.getDepartureSchedule() > 0) {
                 plugin.getTicketManager().addTicket(player, port);
                 player.sendMessage(ChatColor.AQUA + "Welcome! Please take this ticket and wait for the " + port.getDescription() + " to depart.");
             } else {
