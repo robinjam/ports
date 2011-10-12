@@ -50,6 +50,11 @@ public class TicketManager implements Runnable {
             long previousTime = portsTimes.get(world);
             long newTime = previousTime + time - previousTimes.get(world);
             
+            // If time went backwards (thanks to /time set 0 for example)
+            // then move forwards 24h
+            if (newTime < previousTime)
+                newTime += 24000;
+            
             portsTimes.put(world, newTime);
             previousTimes.put(world, time);
             
