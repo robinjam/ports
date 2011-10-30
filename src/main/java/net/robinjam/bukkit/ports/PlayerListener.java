@@ -44,14 +44,6 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         }
     }
     
-    @Override
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled()) return;
-        
-        Player player = event.getPlayer();
-        plugin.getTicketManager().removeTicket(player);
-    }
-    
     private void onPlayerEnterPort(Player player, Port port) {
         if (port.getDestination() == null) {
             player.sendMessage(ChatColor.YELLOW + "This " + port.getDescription() + " has no destination!");

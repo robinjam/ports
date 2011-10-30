@@ -54,7 +54,6 @@ public class Ports extends JavaPlugin {
         // Register events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
-        pm.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
         
         // Register commands
         commandManager = new CommandManager();
