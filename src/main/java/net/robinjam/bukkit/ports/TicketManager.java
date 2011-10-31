@@ -34,6 +34,12 @@ public class TicketManager implements Runnable {
     }
 
     public void run() {
+        for (Player player : playersToRemove) {
+            tickets.remove(player);
+        }
+        
+        playersToRemove.clear();
+        
         Map<World, Long> newTimes = new HashMap();
         for (World world : Bukkit.getWorlds()) {
             newTimes.put(world, world.getFullTime());
@@ -72,12 +78,6 @@ public class TicketManager implements Runnable {
         }
         
         previousTimes = newTimes;
-        
-        for (Player player : playersToRemove) {
-            tickets.remove(player);
-        }
-        
-        playersToRemove.clear();
     }
     
 }
