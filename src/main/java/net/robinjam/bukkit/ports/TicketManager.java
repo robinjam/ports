@@ -19,6 +19,7 @@ public class TicketManager implements Runnable {
     Ports plugin;
     Map<Player, Port> tickets = new HashMap();
     Map<World, Long> previousTimes = new HashMap();
+    Set<Player> playersToRemove = new HashSet();
     
     public TicketManager(Ports plugin) {
         this.plugin = plugin;
@@ -29,7 +30,7 @@ public class TicketManager implements Runnable {
     }
     
     public void removeTicket(Player player) {
-        tickets.remove(player);
+        playersToRemove.add(player);
     }
 
     public void run() {
@@ -39,8 +40,6 @@ public class TicketManager implements Runnable {
             if (!previousTimes.containsKey(world))
                 previousTimes.put(world, world.getFullTime());
         }
-        
-        Set<Player> playersToRemove = new HashSet();
         
         Set<Port> ports = new HashSet(tickets.values());
         for (Port port : ports) {
@@ -59,7 +58,6 @@ public class TicketManager implements Runnable {
                     if (readyToDepart) {
                         Player player = ticket.getKey();
                         plugin.teleportPlayer(player, port);
-                        playersToRemove.add(player);
                     } else {
                         Player player = ticket.getKey();
                         long t = (port.getDepartureSchedule() - newTimes.get(world) % port.getDepartureSchedule());
@@ -76,8 +74,10 @@ public class TicketManager implements Runnable {
         previousTimes = newTimes;
         
         for (Player player : playersToRemove) {
-            removeTicket(player);
+            tickets.remove(player);
         }
+        
+        playersToRemove.clear();
     }
     
 }
