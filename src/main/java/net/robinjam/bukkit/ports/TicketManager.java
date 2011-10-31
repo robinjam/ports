@@ -47,7 +47,7 @@ public class TicketManager implements Runnable {
             World world = Bukkit.getWorld(port.getWorld());
             
             boolean readyToDepart = false;
-            for (long x = previousTimes.get(world); x <= newTimes.get(world); x++) {
+            for (long x = previousTimes.get(world); (x <= newTimes.get(world) + 16); x++) {
                 if (x % port.getDepartureSchedule() == 0) {
                     readyToDepart = true;
                 }
