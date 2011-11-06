@@ -29,6 +29,8 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         
         Player player = event.getPlayer();
         
+        if (player.isInsideVehicle()) return;
+        
         List<Port> ports = plugin.getDatabase().find(Port.class).where().ieq("world", player.getWorld().getName()).findList();
         
         for (Port port : ports) {

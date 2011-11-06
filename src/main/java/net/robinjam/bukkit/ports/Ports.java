@@ -34,6 +34,7 @@ public class Ports extends JavaPlugin {
     private CommandManager commandManager;
     private WorldEditPlugin worldEditPlugin;
     private PlayerListener playerListener = new PlayerListener(this);
+    private VehicleListener vehicleListener = new VehicleListener(this);
     private TicketManager ticketManager = new TicketManager(this);
     
     private static final Logger logger = Logger.getLogger("Minecraft");
@@ -55,6 +56,7 @@ public class Ports extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
         pm.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
+        pm.registerEvent(Type.VEHICLE_ENTER, vehicleListener, Priority.Normal, this);
         
         // Register commands
         commandManager = new CommandManager();
