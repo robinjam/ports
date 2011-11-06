@@ -35,6 +35,10 @@ public class LinkCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "There is no port named '" + fromName + "'.");
             } else if (to == null) {
                 sender.sendMessage(ChatColor.RED + "There is no port named '" + toName + "'.");
+            } else if (fromName.equals(toName)) {
+                from.setDestination(from);
+                plugin.getDatabase().update(from);
+                sender.sendMessage(ChatColor.AQUA + "Destination updated for port '" + from.getName() + "'.");
             } else {
                 from.setDestination(to);
                 plugin.getDatabase().update(from);
