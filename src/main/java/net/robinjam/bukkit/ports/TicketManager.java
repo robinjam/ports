@@ -27,6 +27,7 @@ public class TicketManager implements Runnable {
     
     public void addTicket(Player player, Port port) {
         tickets.put(player, port);
+        playersToRemove.remove(player);
     }
     
     public void removeTicket(Player player) {
