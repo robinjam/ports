@@ -1,44 +1,34 @@
 package net.robinjam.bukkit.ports.commands;
 
-import net.robinjam.bukkit.ports.Ports;
+import java.util.List;
 import net.robinjam.bukkit.ports.persistence.Port;
+import net.robinjam.bukkit.util.Command;
+import net.robinjam.bukkit.util.CommandExecutor;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
- *
+ * Handles the /port unlink command.
+ * 
  * @author robinjam
  */
+@Command(name = "unlink",
+         usage = "[name]",
+         permissions = "ports.unlink",
+         min = 1, max = 1)
 public class UnlinkCommand implements CommandExecutor {
     
-    private final Ports plugin;
+    public void onCommand(CommandSender sender, List<String> args) {
+        Port port = Port.get(args.get(0));
 
-    public UnlinkCommand(final Ports plugin) {
-        this.plugin = plugin;
-    }
-    
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length != 2) {
-            sender.sendMessage(ChatColor.YELLOW + String.format("Usage: /%s unlink [name]", label));
-        } else if (!sender.hasPermission("ports.unlink")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission.");
-        } else {
-            String name = args[1];
-            
-            Port port = plugin.getDatabase().find(Port.class).where().ieq("name", name).findUnique();
-            
-            if (port == null) {
-                sender.sendMessage(ChatColor.RED + "There is no such port to unlink.");
-            } else {
-                port.setDestination(null);
-                plugin.getDatabase().update(port);
-                sender.sendMessage(ChatColor.AQUA + "Portal destination removed.");
-            }
+        if (port == null) {
+            sender.sendMessage(ChatColor.RED + "There is no such port.");
         }
-        
-        return true;
+        else {
+            port.setDestination(null);
+            port.save();
+            sender.sendMessage(ChatColor.AQUA + "Port destination removed.");
+        }
     }
     
 }

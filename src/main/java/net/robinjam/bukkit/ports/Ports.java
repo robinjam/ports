@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import net.robinjam.bukkit.ports.commands.*;
 import net.robinjam.bukkit.ports.persistence.Port;
+import net.robinjam.bukkit.util.CommandExecutor;
 import net.robinjam.bukkit.util.CommandManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -55,18 +56,21 @@ public class Ports extends JavaPlugin {
         
         // Register commands
         commandManager = new CommandManager();
+        commandManager.registerCommands(new CommandExecutor[] {
+            new ArriveCommand(),
+            new CreateCommand(this),
+            new DeleteCommand(),
+            new DescribeCommand(),
+            new DestinationCommand(),
+            new LinkCommand(),
+            new ListCommand(),
+            new ReloadCommand(this),
+            new ScheduleCommand(),
+            new SelectCommand(this),
+            new UnlinkCommand(),
+            new UpdateCommand(this)
+        });
         this.getCommand("port").setExecutor(commandManager);
-        commandManager.registerCommand("list", new ListCommand(this));
-        commandManager.registerCommand("create", new CreateCommand(this));
-        commandManager.registerCommand("delete", new DeleteCommand(this));
-        commandManager.registerCommand("select", new SelectCommand(this));
-        commandManager.registerCommand("arrive", new ArriveCommand(this));
-        commandManager.registerCommand("update", new UpdateCommand(this));
-        commandManager.registerCommand("schedule", new ScheduleCommand(this));
-        commandManager.registerCommand("describe", new DescribeCommand(this));
-        commandManager.registerCommand("destination", new DestinationCommand(this));
-        commandManager.registerCommand("link", new LinkCommand(this));
-        commandManager.registerCommand("unlink", new UnlinkCommand(this));
         
         // Schedule ticket manager
         getServer().getScheduler().scheduleSyncRepeatingTask(this, ticketManager, 0L, 100L);

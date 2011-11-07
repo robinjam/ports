@@ -5,6 +5,7 @@ import com.avaje.ebean.validation.NotNull;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Version;
@@ -243,6 +244,23 @@ public class Port implements Serializable {
     public boolean contains(Location location) {
         Vector pt = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
         return getActivationRegion().contains(pt);
+    }
+    
+    public void save() {
+        plugin.getDatabase().save(this);
+    }
+    
+    public void delete() {
+        plugin.getDatabase().delete(this);
+    }
+    
+    
+    public static Port get(String name) {
+        return plugin.getDatabase().find(Port.class).where().ieq("name", name).findUnique();
+    }
+    
+    public static List<Port> getAll() {
+        return plugin.getDatabase().find(Port.class).findList();
     }
     
 }
