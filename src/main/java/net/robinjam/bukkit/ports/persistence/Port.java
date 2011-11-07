@@ -1,13 +1,12 @@
 package net.robinjam.bukkit.ports.persistence;
 
-import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import net.robinjam.bukkit.ports.Ports;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,8 +21,10 @@ public class Port implements Serializable {
     private static Ports plugin;
     
     @Id
-    @NotNull
     private int id;
+    
+    @Version
+    private int version;
     
     @NotEmpty
     private String name;
@@ -223,6 +224,14 @@ public class Port implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public int getVersion() {
+        return version;
+    }
+    
+    public void setVersion(int version) {
+        this.version = version;
     }
     
 

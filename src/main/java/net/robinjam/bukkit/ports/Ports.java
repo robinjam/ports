@@ -1,11 +1,17 @@
 package net.robinjam.bukkit.ports;
 
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.Transaction;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import net.robinjam.bukkit.ports.commands.*;
@@ -119,13 +125,50 @@ public class Ports extends JavaPlugin {
     }
 
     private void setupDatabase() {
-        try {
-            getDatabase().find(Port.class).findRowCount();
-        } catch (PersistenceException ex) {
+        if (!databaseExists()) {
             logger.info(String.format("[%s] Creating database", pdf.getName()));
             installDDL();
+        } else if (databaseIsOutdated()) {
+            logger.info(String.format("[%s] Upgrading database", pdf.getName()));
+            try {
+                upgradeDatabase();
+            } catch (SQLException ex) {
+                logger.severe(String.format("[%s] Unable to upgrade database!", pdf.getName()));
+                logger.severe(ex.getMessage());
+            }
+        }
+        
+        Port.setPlugin(this);
+    }
+    
+    private boolean databaseExists() {
+        try {
+            getDatabase().find(Port.class).findRowCount();
+            return true;
+        } catch (PersistenceException ex) {
+            return false;
+        }
+    }
+    
+    private boolean databaseIsOutdated() {
+        try {
+            getDatabase().find(Port.class).findList();
+            return false;
+        } catch (PersistenceException ex) {
+            return true;
+        }
+    }
+    
+    private void upgradeDatabase() throws SQLException {
+        Transaction transaction = getDatabase().createTransaction();
+        Connection connection = transaction.getConnection();
+        
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("ALTER TABLE port ADD version INT NOT NULL");
+            connection.commit();
         } finally {
-            Port.setPlugin(this);
+            connection.close();
         }
     }
     
