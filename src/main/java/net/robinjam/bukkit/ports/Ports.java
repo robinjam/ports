@@ -165,7 +165,7 @@ public class Ports extends JavaPlugin {
         
         try {
             Statement statement = connection.createStatement();
-            statement.execute("ALTER TABLE port ADD version INT NOT NULL");
+            statement.execute("ALTER TABLE port ADD version INT DEFAULT 0 NOT NULL");
             connection.commit();
         } finally {
             connection.close();
