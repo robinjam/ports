@@ -65,6 +65,7 @@ public class Ports extends JavaPlugin {
             new LinkCommand(),
             new ListCommand(),
             new ReloadCommand(this),
+            new RenameCommand(),
             new ScheduleCommand(),
             new SelectCommand(this),
             new UnlinkCommand(),
