@@ -41,6 +41,10 @@ public class TicketManager implements Runnable {
         
         playersToRemove.clear();
         
+        for (Port port : tickets.values()) {
+            plugin.getDatabase().refresh(port);
+        }
+        
         Map<World, Long> newTimes = new HashMap();
         for (World world : Bukkit.getWorlds()) {
             newTimes.put(world, world.getFullTime());
