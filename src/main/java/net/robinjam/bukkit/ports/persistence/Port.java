@@ -1,6 +1,7 @@
 package net.robinjam.bukkit.ports.persistence;
 
 import com.avaje.ebean.validation.NotEmpty;
+import com.avaje.ebean.validation.NotNull;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import java.io.Serializable;
@@ -33,11 +34,15 @@ public class Port implements Serializable {
     private String description = "port";
     
     // Activation region
+    @NotNull
     private double x1, y1, z1, x2, y2, z2;
     
     // Arrival location
+    @NotNull
     private String world;
+    @NotNull
     private double x, y, z;
+    @NotNull
     private float yaw, pitch;
     
     private int destinationId;
