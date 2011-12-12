@@ -149,6 +149,11 @@ public class Ports extends JavaPlugin {
     
     public void teleportPlayer(Player player, Port port) {
         player.teleport(port.getDestination().getArrivalLocation());
+        
+        // Reset the player's fall distance so they don't take fall damage
+        player.setFallDistance(0.0f);
+        
+        // Refresh the chunk to prevent chunk errors
         World world = player.getWorld();
         Chunk chunk = world.getChunkAt(player.getLocation());
         world.refreshChunk(chunk.getX(), chunk.getZ());
