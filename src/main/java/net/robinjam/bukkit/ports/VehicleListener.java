@@ -1,13 +1,16 @@
 package net.robinjam.bukkit.ports;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 /**
  *
  * @author robinjam
  */
-class VehicleListener extends org.bukkit.event.vehicle.VehicleListener {
+class VehicleListener implements Listener {
     
     private Ports plugin;
     
@@ -15,7 +18,7 @@ class VehicleListener extends org.bukkit.event.vehicle.VehicleListener {
         this.plugin = plugin;
     }
 
-    @Override
+    @EventHandler(priority=EventPriority.NORMAL)
     public void onVehicleEnter(VehicleEnterEvent event) {
         if (event.isCancelled() || !(event.getEntered() instanceof Player))
             return;

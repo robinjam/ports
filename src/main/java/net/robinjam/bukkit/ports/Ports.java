@@ -1,29 +1,22 @@
 package net.robinjam.bukkit.ports;
 
-import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.Transaction;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import net.robinjam.bukkit.ports.commands.*;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandManager;
-import net.robinjam.bukkit.util.Configuration;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -35,7 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Ports extends JavaPlugin {
     
-    private Configuration config;
     private PluginDescriptionFile pdf;
     private CommandManager commandManager;
     private WorldEditPlugin worldEditPlugin;
@@ -45,12 +37,10 @@ public class Ports extends JavaPlugin {
     
     private static final Logger logger = Logger.getLogger("Minecraft");
 
+    @Override
     public void onEnable() {
         // Read plugin description file
         pdf = this.getDescription();
-        
-        // Load the configuration file
-        this.reload();
         
         // Hook into WorldEdit
         this.hookWorldEdit();
@@ -60,14 +50,12 @@ public class Ports extends JavaPlugin {
         
         // Register events
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.Normal, this);
-        pm.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
-        pm.registerEvent(Type.VEHICLE_ENTER, vehicleListener, Priority.Normal, this);
+        pm.registerEvents(playerListener, this);
+        pm.registerEvents(vehicleListener, this);
         
         // Register commands
         commandManager = new CommandManager();
         this.getCommand("port").setExecutor(commandManager);
-        commandManager.registerCommand("reload", new ReloadCommand(this));
         commandManager.registerCommand("list", new ListCommand(this));
         commandManager.registerCommand("create", new CreateCommand(this));
         commandManager.registerCommand("delete", new DeleteCommand(this));
@@ -86,22 +74,9 @@ public class Ports extends JavaPlugin {
         logger.info(String.format("%s version %s is enabled!", pdf.getName(), pdf.getVersion()));
     }
     
+    @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
-    }
-
-    public void reload() {
-        File dataFolder = this.getDataFolder();
-        
-        if(!dataFolder.exists())
-            dataFolder.mkdir();
-        
-        try {
-            config = new Configuration(new File(dataFolder, "config.yml"));
-        } catch (IOException ex) {
-            logger.severe(String.format("[%s] Unable to create default configuration file!", pdf.getName()));
-            logger.severe(String.format("[%s] %s", pdf.getName(), ex.getMessage()));
-        }
     }
     
     private void hookWorldEdit() {

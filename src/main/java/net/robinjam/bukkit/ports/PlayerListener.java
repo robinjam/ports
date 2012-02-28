@@ -6,6 +6,10 @@ import java.util.Map;
 import net.robinjam.bukkit.ports.persistence.Port;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -13,7 +17,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  *
  * @author robinjam
  */
-public class PlayerListener extends org.bukkit.event.player.PlayerListener {
+public class PlayerListener implements Listener {
     
     private Ports plugin;
     
@@ -23,7 +27,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         this.plugin = plugin;
     }
     
-    @Override
+    @EventHandler(priority=EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled()) return;
         
@@ -46,7 +50,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
         }
     }
     
-    @Override
+    @EventHandler(priority=EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (event.isCancelled()) return;
         
