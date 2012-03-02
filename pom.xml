@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.robinjam.bukkit</groupId>
     <artifactId>ports</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.1.3</version>
     <name>Ports</name>
     <url>http://www.robinjam.net</url>
     
