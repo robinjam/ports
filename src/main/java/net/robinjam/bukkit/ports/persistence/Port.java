@@ -20,7 +20,9 @@ import org.bukkit.Location;
 @Entity()
 public class Port implements Serializable {
     
-    private static Ports plugin;
+	private static final long serialVersionUID = 1L;
+
+	private static Ports plugin;
     
     @Id
     private int id;

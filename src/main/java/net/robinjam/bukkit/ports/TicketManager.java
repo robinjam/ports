@@ -17,9 +17,9 @@ import org.bukkit.entity.Player;
 public class TicketManager implements Runnable {
     
     Ports plugin;
-    Map<Player, Port> tickets = new HashMap();
-    Map<World, Long> previousTimes = new HashMap();
-    Set<Player> playersToRemove = new HashSet();
+    Map<Player, Port> tickets = new HashMap<Player, Port>();
+    Map<World, Long> previousTimes = new HashMap<World, Long>();
+    Set<Player> playersToRemove = new HashSet<Player>();
     
     public TicketManager(Ports plugin) {
         this.plugin = plugin;
@@ -45,14 +45,14 @@ public class TicketManager implements Runnable {
             plugin.getDatabase().refresh(port);
         }
         
-        Map<World, Long> newTimes = new HashMap();
+        Map<World, Long> newTimes = new HashMap<World, Long>();
         for (World world : Bukkit.getWorlds()) {
             newTimes.put(world, world.getFullTime());
             if (!previousTimes.containsKey(world))
                 previousTimes.put(world, world.getFullTime());
         }
         
-        Set<Port> ports = new HashSet(tickets.values());
+        Set<Port> ports = new HashSet<Port>(tickets.values());
         for (Port port : ports) {
             World world = Bukkit.getWorld(port.getWorld());
             

@@ -11,7 +11,7 @@ public class StringUtil {
     
     public static String join(Collection<String> strings, String separator) {
         StringBuilder result = new StringBuilder();
-        Iterator it = strings.iterator();
+        Iterator<String> it = strings.iterator();
         while(it.hasNext()) {
             result.append(it.next());
             if (!it.hasNext())

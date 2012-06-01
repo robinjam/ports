@@ -20,7 +20,7 @@ public class CommandManager implements org.bukkit.command.CommandExecutor {
     private Map<String, CommandExecutor> commands; // Maps command names to their executors
     
     public CommandManager() {
-        commands = new HashMap();
+        commands = new HashMap<String, CommandExecutor>();
     }
 
     public boolean onCommand(final CommandSender sender, final org.bukkit.command.Command command, final String label, final String[] args) {

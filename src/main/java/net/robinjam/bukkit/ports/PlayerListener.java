@@ -6,7 +6,6 @@ import java.util.Map;
 import net.robinjam.bukkit.ports.persistence.Port;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,7 +20,7 @@ public class PlayerListener implements Listener {
     
     private Ports plugin;
     
-    private Map<Player, Port> playerLocations = new HashMap();
+    private Map<Player, Port> playerLocations = new HashMap<Player, Port>();
     
     public PlayerListener(Ports plugin) {
         this.plugin = plugin;

@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender;
 public class ListCommand implements CommandExecutor {
 
     public void onCommand(CommandSender sender, List<String> args) {
-        List<String> portNames = new ArrayList();
+        List<String> portNames = new ArrayList<String>();
         for (Port port : Port.getAll()) {
             portNames.add(port.getName());
         }
