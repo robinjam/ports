@@ -12,19 +12,18 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "reload",
-         permissions = "ports.reload")
+@Command(name = "reload", permissions = "ports.reload")
 public class ReloadCommand implements CommandExecutor {
-    
-    private final Ports plugin;
 
-    public ReloadCommand(final Ports plugin) {
-        this.plugin = plugin;
-    }
+	private final Ports plugin;
 
-    public void onCommand(CommandSender sender, List<String> args) {
-        plugin.reloadConfig();
-        sender.sendMessage(ChatColor.AQUA + "Ports configuration reloaded");
-    }
-    
+	public ReloadCommand(final Ports plugin) {
+		this.plugin = plugin;
+	}
+
+	public void onCommand(CommandSender sender, List<String> args) {
+		plugin.reloadConfig();
+		sender.sendMessage(ChatColor.AQUA + "Ports configuration reloaded");
+	}
+
 }

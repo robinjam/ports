@@ -20,49 +20,48 @@ import org.bukkit.entity.Player;
  * 
  * @author robinjam
  */
-@Command(name = "update",
-         usage = "[name]",
-         permissions = "ports.update",
-         playerOnly = true,
-         min = 1, max = 1)
+@Command(name = "update", usage = "[name]", permissions = "ports.update", playerOnly = true, min = 1, max = 1)
 public class UpdateCommand implements CommandExecutor {
-    
-    private final Ports plugin;
 
-    public UpdateCommand(final Ports plugin) {
-        this.plugin = plugin;
-    }
-        
-    public void onCommand(CommandSender sender, List<String> args) {
-        Player player = (Player) sender;
-        Port port = Port.get(args.get(0));
+	private final Ports plugin;
 
-        if (port == null) {
-            sender.sendMessage(ChatColor.RED + "There is no such port.");
-        }
-        else if (!player.getWorld().getName().equals(port.getWorld())) {
-            sender.sendMessage(ChatColor.RED + "That port is in a different world ('" + port.getWorld() + "').");
-        }
-        else {
-            WorldEdit worldEdit = plugin.getWorldEdit();
-            LocalSession session = worldEdit.getSession(player.getName());
-            Region selection;
-            try {
-                selection = session.getSelection(new BukkitWorld(player.getWorld()));
-            } catch (IncompleteRegionException ex) {
-                sender.sendMessage(ChatColor.RED + "Please select the activation area using WorldEdit first.");
-                return;
-            }
+	public UpdateCommand(final Ports plugin) {
+		this.plugin = plugin;
+	}
 
-            if (!(selection instanceof CuboidRegion)) {
-                sender.sendMessage(ChatColor.RED + "Only cuboid regions are supported.");
-                return;
-            }
+	public void onCommand(CommandSender sender, List<String> args) {
+		Player player = (Player) sender;
+		Port port = Port.get(args.get(0));
 
-            port.setActivationRegion((CuboidRegion) selection);
-            port.save();
-            sender.sendMessage(ChatColor.AQUA + "Activation region updated.");
-        }
-    }
-    
+		if (port == null) {
+			sender.sendMessage(ChatColor.RED + "There is no such port.");
+		} else if (!player.getWorld().getName().equals(port.getWorld())) {
+			sender.sendMessage(ChatColor.RED
+					+ "That port is in a different world ('" + port.getWorld()
+					+ "').");
+		} else {
+			WorldEdit worldEdit = plugin.getWorldEdit();
+			LocalSession session = worldEdit.getSession(player.getName());
+			Region selection;
+			try {
+				selection = session.getSelection(new BukkitWorld(player
+						.getWorld()));
+			} catch (IncompleteRegionException ex) {
+				sender.sendMessage(ChatColor.RED
+						+ "Please select the activation area using WorldEdit first.");
+				return;
+			}
+
+			if (!(selection instanceof CuboidRegion)) {
+				sender.sendMessage(ChatColor.RED
+						+ "Only cuboid regions are supported.");
+				return;
+			}
+
+			port.setActivationRegion((CuboidRegion) selection);
+			port.save();
+			sender.sendMessage(ChatColor.AQUA + "Activation region updated.");
+		}
+	}
+
 }

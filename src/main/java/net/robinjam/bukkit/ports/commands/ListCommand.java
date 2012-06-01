@@ -14,22 +14,22 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "list",
-         permissions = "ports.list")
+@Command(name = "list", permissions = "ports.list")
 public class ListCommand implements CommandExecutor {
 
-    public void onCommand(CommandSender sender, List<String> args) {
-        List<String> portNames = new ArrayList<String>();
-        for (Port port : Port.getAll()) {
-            portNames.add(port.getName());
-        }
-        
-        if (portNames.size() > 0) {
-            sender.sendMessage(ChatColor.YELLOW + "Available ports: " + StringUtil.join(portNames, ", "));
-        }
-        else {
-            sender.sendMessage(ChatColor.YELLOW + "There are no ports defined yet.");
-        }
-    }
-    
+	public void onCommand(CommandSender sender, List<String> args) {
+		List<String> portNames = new ArrayList<String>();
+		for (Port port : Port.getAll()) {
+			portNames.add(port.getName());
+		}
+
+		if (portNames.size() > 0) {
+			sender.sendMessage(ChatColor.YELLOW + "Available ports: "
+					+ StringUtil.join(portNames, ", "));
+		} else {
+			sender.sendMessage(ChatColor.YELLOW
+					+ "There are no ports defined yet.");
+		}
+	}
+
 }

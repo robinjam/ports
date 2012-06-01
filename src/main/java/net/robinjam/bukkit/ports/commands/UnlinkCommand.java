@@ -12,23 +12,19 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "unlink",
-         usage = "[name]",
-         permissions = "ports.unlink",
-         min = 1, max = 1)
+@Command(name = "unlink", usage = "[name]", permissions = "ports.unlink", min = 1, max = 1)
 public class UnlinkCommand implements CommandExecutor {
-    
-    public void onCommand(CommandSender sender, List<String> args) {
-        Port port = Port.get(args.get(0));
 
-        if (port == null) {
-            sender.sendMessage(ChatColor.RED + "There is no such port.");
-        }
-        else {
-            port.setDestination(null);
-            port.save();
-            sender.sendMessage(ChatColor.AQUA + "Port destination removed.");
-        }
-    }
-    
+	public void onCommand(CommandSender sender, List<String> args) {
+		Port port = Port.get(args.get(0));
+
+		if (port == null) {
+			sender.sendMessage(ChatColor.RED + "There is no such port.");
+		} else {
+			port.setDestination(null);
+			port.save();
+			sender.sendMessage(ChatColor.AQUA + "Port destination removed.");
+		}
+	}
+
 }

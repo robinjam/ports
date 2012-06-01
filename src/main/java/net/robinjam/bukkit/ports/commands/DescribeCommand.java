@@ -13,23 +13,20 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "describe",
-         usage = "[name] [description]",
-         permissions = "ports.describe",
-         min = 2, max = -1)
+@Command(name = "describe", usage = "[name] [description]", permissions = "ports.describe", min = 2, max = -1)
 public class DescribeCommand implements CommandExecutor {
 
-    public void onCommand(CommandSender sender, List<String> args) {
-        Port port = Port.get(args.get(0));
+	public void onCommand(CommandSender sender, List<String> args) {
+		Port port = Port.get(args.get(0));
 
-        if (port == null) {
-            sender.sendMessage(ChatColor.RED + "There is no such port.");
-        }
-        else {
-            port.setDescription(StringUtil.join(args.subList(1, args.size()), " "));
-            port.save();
-            sender.sendMessage(ChatColor.AQUA + "Description updated.");
-        }
-    }
-    
+		if (port == null) {
+			sender.sendMessage(ChatColor.RED + "There is no such port.");
+		} else {
+			port.setDescription(StringUtil.join(args.subList(1, args.size()),
+					" "));
+			port.save();
+			sender.sendMessage(ChatColor.AQUA + "Description updated.");
+		}
+	}
+
 }

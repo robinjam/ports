@@ -12,23 +12,19 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "rename",
-         usage = "[old] [new]",
-         permissions = "ports.rename",
-         min = 2, max = 2)
+@Command(name = "rename", usage = "[old] [new]", permissions = "ports.rename", min = 2, max = 2)
 public class RenameCommand implements CommandExecutor {
 
-    public void onCommand(CommandSender sender, List<String> args) {
-        Port port = Port.get(args.get(0));
-        
-        if (port == null) {
-            sender.sendMessage(ChatColor.RED + "There is no such port.");
-        }
-        else {
-            port.setName(args.get(1));
-            port.save();
-            sender.sendMessage(ChatColor.AQUA + "Port renamed.");
-        }
-    }
-    
+	public void onCommand(CommandSender sender, List<String> args) {
+		Port port = Port.get(args.get(0));
+
+		if (port == null) {
+			sender.sendMessage(ChatColor.RED + "There is no such port.");
+		} else {
+			port.setName(args.get(1));
+			port.save();
+			sender.sendMessage(ChatColor.AQUA + "Port renamed.");
+		}
+	}
+
 }

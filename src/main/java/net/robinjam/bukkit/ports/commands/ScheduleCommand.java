@@ -12,38 +12,36 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "schedule",
-         usage = "[name] [schedule]",
-         permissions = "ports.schedule",
-         min = 2, max = 2)
+@Command(name = "schedule", usage = "[name] [schedule]", permissions = "ports.schedule", min = 2, max = 2)
 public class ScheduleCommand implements CommandExecutor {
-    
-    public void onCommand(CommandSender sender, List<String> args) {
-        String name = args.get(0);
-        int departureSchedule;
 
-        try {
-            departureSchedule = Integer.parseInt(args.get(1));
-        } catch (Exception ex) {
-            sender.sendMessage(ChatColor.RED + "Departure schedule must be a number.");
-            return;
-        }
+	public void onCommand(CommandSender sender, List<String> args) {
+		String name = args.get(0);
+		int departureSchedule;
 
-        if (departureSchedule < 0) {
-            sender.sendMessage(ChatColor.RED + "Departure schedule must be positive.");
-            return;
-        }
+		try {
+			departureSchedule = Integer.parseInt(args.get(1));
+		} catch (Exception ex) {
+			sender.sendMessage(ChatColor.RED
+					+ "Departure schedule must be a number.");
+			return;
+		}
 
-        Port port = Port.get(name);
+		if (departureSchedule < 0) {
+			sender.sendMessage(ChatColor.RED
+					+ "Departure schedule must be positive.");
+			return;
+		}
 
-        if (port == null) {
-            sender.sendMessage(ChatColor.RED + "There is no such port.");
-        }
-        else {
-            port.setDepartureSchedule(departureSchedule);
-            port.save();
-            sender.sendMessage(ChatColor.AQUA + "Departure schedule updated.");
-        }
-    }
-    
+		Port port = Port.get(name);
+
+		if (port == null) {
+			sender.sendMessage(ChatColor.RED + "There is no such port.");
+		} else {
+			port.setDepartureSchedule(departureSchedule);
+			port.save();
+			sender.sendMessage(ChatColor.AQUA + "Departure schedule updated.");
+		}
+	}
+
 }
