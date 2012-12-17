@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 import net.robinjam.bukkit.ports.commands.*;
 import net.robinjam.bukkit.ports.persistence.Port;
@@ -19,7 +18,6 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,20 +27,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Ports extends JavaPlugin {
 
-	private PluginDescriptionFile pdf;
 	private CommandManager commandManager;
 	private WorldEditPlugin worldEditPlugin;
 	private PlayerListener playerListener = new PlayerListener(this);
 	private VehicleListener vehicleListener = new VehicleListener(this);
 	private TicketManager ticketManager = new TicketManager(this);
 
-	private static final Logger logger = Logger.getLogger("Minecraft");
-
 	@Override
 	public void onEnable() {
-		// Read plugin description file
-		pdf = this.getDescription();
-
 		// Hook into WorldEdit
 		this.hookWorldEdit();
 
@@ -98,16 +90,15 @@ public class Ports extends JavaPlugin {
 
 	private void setupDatabase() {
 		if (!databaseExists()) {
-			logger.info(String.format("[%s] Creating database", pdf.getName()));
+			getLogger().info("Creating database");
 			installDDL();
 		} else if (databaseIsOutdated()) {
-			logger.info(String.format("[%s] Upgrading database", pdf.getName()));
+			getLogger().info("Upgrading database");
 			try {
 				upgradeDatabase();
 			} catch (SQLException ex) {
-				logger.severe(String.format("[%s] Unable to upgrade database!",
-						pdf.getName()));
-				logger.severe(ex.getMessage());
+				getLogger().severe("Unable to upgrade database!");
+				getLogger().severe(ex.getMessage());
 			}
 		}
 
