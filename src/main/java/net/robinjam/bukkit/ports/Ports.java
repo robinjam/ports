@@ -68,9 +68,6 @@ public class Ports extends JavaPlugin {
 		// Schedule ticket manager
 		getServer().getScheduler().scheduleSyncRepeatingTask(this,
 				ticketManager, 0L, 100L);
-
-		logger.info(String.format("%s version %s is enabled!", pdf.getName(),
-				pdf.getVersion()));
 	}
 
 	@Override
