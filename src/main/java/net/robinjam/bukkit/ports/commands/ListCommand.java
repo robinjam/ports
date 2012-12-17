@@ -5,7 +5,7 @@ import java.util.List;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.Command;
 import net.robinjam.bukkit.util.CommandExecutor;
-import net.robinjam.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -25,7 +25,7 @@ public class ListCommand implements CommandExecutor {
 
 		if (portNames.size() > 0) {
 			sender.sendMessage(ChatColor.YELLOW + "Available ports: "
-					+ StringUtil.join(portNames, ", "));
+					+ StringUtils.join(portNames, ", "));
 		} else {
 			sender.sendMessage(ChatColor.YELLOW
 					+ "There are no ports defined yet.");

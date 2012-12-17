@@ -4,7 +4,7 @@ import java.util.List;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.Command;
 import net.robinjam.bukkit.util.CommandExecutor;
-import net.robinjam.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -22,7 +22,7 @@ public class DescribeCommand implements CommandExecutor {
 		if (port == null) {
 			sender.sendMessage(ChatColor.RED + "There is no such port.");
 		} else {
-			port.setDescription(StringUtil.join(args.subList(1, args.size()),
+			port.setDescription(StringUtils.join(args.subList(1, args.size()),
 					" "));
 			port.save();
 			sender.sendMessage(ChatColor.AQUA + "Description updated.");

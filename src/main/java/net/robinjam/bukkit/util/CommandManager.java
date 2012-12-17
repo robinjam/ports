@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.robinjam.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ public class CommandManager implements org.bukkit.command.CommandExecutor {
 
 		sender.sendMessage(ChatColor.YELLOW
 				+ String.format("Usage: /%s [%s]", label,
-						StringUtil.join(commands.keySet(), "|")));
+						StringUtils.join(commands.keySet(), "|")));
 
 		return true;
 	}
