@@ -14,8 +14,8 @@
 		</repository>
 
 		<repository>
-			<id>sk89q-mvn2</id>
-			<url>http://mvn2.sk89q.com/repo</url>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
 	</repositories>
 
@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldedit</artifactId>
-			<version>4.7</version>
+			<version>5.4.5</version>
 		</dependency>
 	</dependencies>
 </project>
