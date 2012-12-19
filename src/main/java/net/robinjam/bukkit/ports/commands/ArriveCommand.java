@@ -28,7 +28,7 @@ public class ArriveCommand implements CommandExecutor {
 					+ "').");
 		} else {
 			port.setArrivalLocation(player.getLocation());
-			port.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA + "Arrival location updated.");
 		}
 	}

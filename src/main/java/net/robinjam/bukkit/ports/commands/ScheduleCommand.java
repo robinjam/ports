@@ -39,7 +39,7 @@ public class ScheduleCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.RED + "There is no such port.");
 		} else {
 			port.setDepartureSchedule(departureSchedule);
-			port.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA + "Departure schedule updated.");
 		}
 	}

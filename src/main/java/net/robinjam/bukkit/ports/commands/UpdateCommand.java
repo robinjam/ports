@@ -58,8 +58,8 @@ public class UpdateCommand implements CommandExecutor {
 				return;
 			}
 
-			port.setActivationRegion((CuboidRegion) selection);
-			port.save();
+			port.setActivationRegion(((CuboidRegion) selection).clone());
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA + "Activation region updated.");
 		}
 	}

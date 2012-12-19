@@ -30,7 +30,7 @@ public class DestinationCommand implements CommandExecutor {
 					+ toName + "'.");
 		} else {
 			from.setDestination(to);
-			from.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA
 					+ "Destination updated for port '" + fromName + "'.");
 		}

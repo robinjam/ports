@@ -1,18 +1,22 @@
 package net.robinjam.bukkit.ports;
 
-import com.avaje.ebean.Transaction;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.PersistenceException;
-import net.robinjam.bukkit.ports.commands.*;
+import net.robinjam.bukkit.ports.commands.ArriveCommand;
+import net.robinjam.bukkit.ports.commands.CreateCommand;
+import net.robinjam.bukkit.ports.commands.DeleteCommand;
+import net.robinjam.bukkit.ports.commands.DescribeCommand;
+import net.robinjam.bukkit.ports.commands.DestinationCommand;
+import net.robinjam.bukkit.ports.commands.LinkCommand;
+import net.robinjam.bukkit.ports.commands.ListCommand;
+import net.robinjam.bukkit.ports.commands.ReloadCommand;
+import net.robinjam.bukkit.ports.commands.RenameCommand;
+import net.robinjam.bukkit.ports.commands.ScheduleCommand;
+import net.robinjam.bukkit.ports.commands.SelectCommand;
+import net.robinjam.bukkit.ports.commands.UnlinkCommand;
+import net.robinjam.bukkit.ports.commands.UpdateCommand;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandExecutor;
 import net.robinjam.bukkit.util.CommandManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -20,6 +24,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 /**
  * 
@@ -37,9 +44,6 @@ public class Ports extends JavaPlugin {
 	public void onEnable() {
 		// Hook into WorldEdit
 		this.hookWorldEdit();
-
-		// Set up database
-		this.setupDatabase();
 
 		// Register events
 		PluginManager pm = getServer().getPluginManager();
@@ -79,62 +83,6 @@ public class Ports extends JavaPlugin {
 
 	public WorldEdit getWorldEdit() {
 		return this.worldEditPlugin.getWorldEdit();
-	}
-
-	@Override
-	public List<Class<?>> getDatabaseClasses() {
-		List<Class<?>> list = new ArrayList<Class<?>>();
-		list.add(Port.class);
-		return list;
-	}
-
-	private void setupDatabase() {
-		if (!databaseExists()) {
-			getLogger().info("Creating database");
-			installDDL();
-		} else if (databaseIsOutdated()) {
-			getLogger().info("Upgrading database");
-			try {
-				upgradeDatabase();
-			} catch (SQLException ex) {
-				getLogger().severe("Unable to upgrade database!");
-				getLogger().severe(ex.getMessage());
-			}
-		}
-
-		Port.setPlugin(this);
-	}
-
-	private boolean databaseExists() {
-		try {
-			getDatabase().find(Port.class).findRowCount();
-			return true;
-		} catch (PersistenceException ex) {
-			return false;
-		}
-	}
-
-	private boolean databaseIsOutdated() {
-		try {
-			getDatabase().find(Port.class).findList();
-			return false;
-		} catch (PersistenceException ex) {
-			return true;
-		}
-	}
-
-	private void upgradeDatabase() throws SQLException {
-		Transaction transaction = getDatabase().createTransaction();
-		Connection connection = transaction.getConnection();
-
-		try {
-			Statement statement = connection.createStatement();
-			statement
-					.execute("ALTER TABLE port ADD version INT DEFAULT 0 NOT NULL");
-			connection.commit();
-		} finally {
-			connection.close();
-		}
 	}
 
 	public void teleportPlayer(Player player, Port port) {

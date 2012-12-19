@@ -3,7 +3,6 @@ main: net.robinjam.bukkit.ports.Ports
 version: ${project.version}
 author: robinjam
 depend: [WorldEdit]
-database: true
 
 commands:
   port:

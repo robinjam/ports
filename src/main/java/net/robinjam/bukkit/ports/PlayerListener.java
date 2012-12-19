@@ -1,8 +1,11 @@
 package net.robinjam.bukkit.ports;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+
 import net.robinjam.bukkit.ports.persistence.Port;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -36,8 +39,14 @@ public class PlayerListener implements Listener {
 		if (player.isInsideVehicle())
 			return;
 
-		List<Port> ports = plugin.getDatabase().find(Port.class).where()
-				.ieq("world", player.getWorld().getName()).findList();
+		Set<Port> ports = new HashSet<Port>(Port.getAll());
+		Iterator<Port> it = ports.iterator();
+		while (it.hasNext()) {
+			Port port = it.next();
+			if (!player.getWorld().getName().equals(port.getWorld())) {
+				it.remove();
+			}
+		}
 
 		for (Port port : ports) {
 			if (!port.contains(event.getFrom()) && port.contains(event.getTo())) {

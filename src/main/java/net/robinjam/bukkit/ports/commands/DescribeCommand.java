@@ -24,7 +24,7 @@ public class DescribeCommand implements CommandExecutor {
 		} else {
 			port.setDescription(StringUtils.join(args.subList(1, args.size()),
 					" "));
-			port.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA + "Description updated.");
 		}
 	}

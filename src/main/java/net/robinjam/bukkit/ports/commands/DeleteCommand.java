@@ -21,7 +21,7 @@ public class DeleteCommand implements CommandExecutor {
 		if (port == null)
 			sender.sendMessage(ChatColor.RED + "There is no such port.");
 		else {
-			port.delete();
+			Port.remove(port);
 			sender.sendMessage(ChatColor.AQUA
 					+ "The port was deleted successfully.");
 		}

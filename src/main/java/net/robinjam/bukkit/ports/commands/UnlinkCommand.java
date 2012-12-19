@@ -22,7 +22,7 @@ public class UnlinkCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.RED + "There is no such port.");
 		} else {
 			port.setDestination(null);
-			port.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA + "Port destination removed.");
 		}
 	}
