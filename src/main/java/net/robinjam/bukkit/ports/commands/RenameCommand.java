@@ -22,7 +22,7 @@ public class RenameCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.RED + "There is no such port.");
 		} else {
 			port.setName(args.get(1));
-			port.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA + "Port renamed.");
 		}
 	}

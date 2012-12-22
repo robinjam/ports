@@ -1,269 +1,193 @@
 package net.robinjam.bukkit.ports.persistence;
 
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import java.io.Serializable;
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import java.util.Map;
+import java.util.Set;
+
 import net.robinjam.bukkit.ports.Ports;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.regions.CuboidRegion;
 
 /**
  * 
  * @author robinjam
  */
-@Entity()
-public class Port implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	private static Ports plugin;
-
-	@Id
-	private int id;
-
-	@Version
-	private int version;
-
-	@NotEmpty
-	private String name;
-
-	@NotEmpty
-	private String description = "port";
-
-	// Activation region
-	@NotNull
-	private double x1, y1, z1, x2, y2, z2;
-
-	// Arrival location
-	@NotNull
-	private String world;
-	@NotNull
-	private double x, y, z;
-	@NotNull
-	private float yaw, pitch;
-
-	private int destinationId;
-
+public class Port implements ConfigurationSerializable {
+	
+	private static Set<Port> ports = new HashSet<Port>();
+	
+	public static Port get(String name) {
+		for (Port port : ports) {
+			if (port.getName().equals(name))
+				return port;
+		}
+		
+		return null;
+	}
+	
+	public static Set<Port> getAll() {
+		return ports;
+	}
+	
+	public static void remove(Port port) {
+		ports.remove(port);
+		save();
+	}
+	
+	public static void save() {
+		YamlConfiguration config = new YamlConfiguration();
+		config.set("ports", new ArrayList<Port>(ports));
+		
+		Ports plugin = (Ports) Bukkit.getPluginManager().getPlugin("Ports");
+		File file = new File(plugin.getDataFolder(), "ports.yml");
+		try {
+			config.save(file);
+		} catch (IOException e) {
+			plugin.getLogger().severe("Unable to save " + file + "!");
+			plugin.getLogger().severe(e.getMessage());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void load() {
+		// Load the ports.yml file from the plugin's data folder
+		Ports plugin = (Ports) Bukkit.getPluginManager().getPlugin("Ports");
+		File file = new File(plugin.getDataFolder(), "ports.yml");
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		
+		// Load the port data
+		Object data = config.get("ports");
+		if (data != null)
+			ports = new HashSet<Port>((List<Port>) data);
+		
+		// Iterate over the newly loaded ports and set up destinations accordingly.
+		for (Port port : ports) {
+			if (port.destinationName != null) {
+				for (Port p : ports) {
+					if (p.getName().equals(port.destinationName)) {
+						port.setDestination(p);
+						port.destinationName = null;
+					}
+				}
+			}
+		}
+	}
+	
+	private String name, description = "port";
+	private CuboidRegion activationRegion;
+	private Location arrivalLocation;
+	private WeakReference<Port> destination = new WeakReference<Port>(null);
+	private String destinationName;
 	private int departureSchedule;
-
-	public static void setPlugin(Ports plugin) {
-		Port.plugin = plugin;
+	
+	public Port()
+	{
+		ports.add(this);
+	}
+	
+	public boolean contains(Location location) {
+		Vector vec = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		return activationRegion.contains(vec);
+	}
+	
+	public Port getDestination() {
+		Port destination = this.destination.get();
+		return ports.contains(destination) ? destination : null;
+	}
+	
+	public void setDestination(Port destination) {
+		this.destination = new WeakReference<Port>(destination);
+	}
+	
+	public String getWorld() {
+		return getArrivalLocation().getWorld().getName();
 	}
 
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("name", getName());
+		result.put("world", getWorld());
+		result.put("description", getDescription());
+		result.put("activationRegion", new PersistentCuboidRegion(getActivationRegion()));
+		result.put("arrivalLocation", new PersistentLocation(getArrivalLocation()));
+		if (getDestination() != null)
+			result.put("destination", getDestination().getName());
+		result.put("departureSchedule", getDepartureSchedule());
+		return result;
+	}
+	
+	public static Port deserialize(Map<String, Object> data) {
+		Port result = new Port();
+		result.setName((String) data.get("name"));
+		result.setDescription((String) data.get("description"));
+		
+		PersistentCuboidRegion activationRegion = (PersistentCuboidRegion) data.get("activationRegion");
+		result.setActivationRegion(activationRegion.getRegion());
+		
+		World world = Bukkit.getWorld((String) data.get("world"));
+		PersistentLocation arrivalLocation = (PersistentLocation) data.get("arrivalLocation");
+		result.setArrivalLocation(arrivalLocation.getLocation(world));
+		
+		result.destinationName = (String) data.get("destination");
+		result.setDepartureSchedule((Integer) data.get("departureSchedule"));
+		
+		return result;
+	}
+	
+	// Boilerplate
+	
 	public String getName() {
 		return name;
 	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public CuboidRegion getActivationRegion() {
-		Vector v1 = new Vector(getX1(), getY1(), getZ1());
-		Vector v2 = new Vector(getX2(), getY2(), getZ2());
-		return new CuboidRegion(v1, v2);
-	}
-
-	public Location getArrivalLocation() {
-		return new Location(Bukkit.getWorld(getWorld()), getX(), getY(),
-				getZ(), getYaw(), getPitch());
-	}
-
-	public Port getDestination() {
-		return plugin.getDatabase().find(Port.class).where()
-				.eq("id", destinationId).findUnique();
-	}
-
-	public int getDepartureSchedule() {
-		return departureSchedule;
-	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public String getDescription() {
+		return description;
+	}
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
+	public CuboidRegion getActivationRegion() {
+		return activationRegion;
+	}
+	
 	public void setActivationRegion(CuboidRegion activationRegion) {
-		Vector v1 = activationRegion.getPos1();
-		Vector v2 = activationRegion.getPos2();
-		setX1(v1.getX());
-		setY1(v1.getY());
-		setZ1(v1.getZ());
-		setX2(v2.getX());
-		setY2(v2.getY());
-		setZ2(v2.getZ());
+		this.activationRegion = activationRegion;
 	}
-
+	
+	public Location getArrivalLocation() {
+		return arrivalLocation;
+	}
+	
 	public void setArrivalLocation(Location arrivalLocation) {
-		setWorld(arrivalLocation.getWorld().getName());
-		setX(arrivalLocation.getX());
-		setY(arrivalLocation.getY());
-		setZ(arrivalLocation.getZ());
-		setYaw(arrivalLocation.getYaw());
-		setPitch(arrivalLocation.getPitch());
+		this.arrivalLocation = arrivalLocation;
 	}
-
-	public void setDestination(Port destination) {
-		if (destination == null)
-			setDestinationId(0);
-		else
-			setDestinationId(destination.getId());
+	
+	public int getDepartureSchedule() {
+		return departureSchedule;
 	}
-
+	
 	public void setDepartureSchedule(int departureSchedule) {
 		this.departureSchedule = departureSchedule;
-	}
-
-	public double getX1() {
-		return x1;
-	}
-
-	public void setX1(double x1) {
-		this.x1 = x1;
-	}
-
-	public double getY1() {
-		return y1;
-	}
-
-	public void setY1(double y1) {
-		this.y1 = y1;
-	}
-
-	public double getZ1() {
-		return z1;
-	}
-
-	public void setZ1(double z1) {
-		this.z1 = z1;
-	}
-
-	public double getX2() {
-		return x2;
-	}
-
-	public void setX2(double x2) {
-		this.x2 = x2;
-	}
-
-	public double getY2() {
-		return y2;
-	}
-
-	public void setY2(double y2) {
-		this.y2 = y2;
-	}
-
-	public double getZ2() {
-		return z2;
-	}
-
-	public void setZ2(double z2) {
-		this.z2 = z2;
-	}
-
-	public String getWorld() {
-		return world;
-	}
-
-	public void setWorld(String world) {
-		this.world = world;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	public double getZ() {
-		return z;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
-	}
-
-	public float getYaw() {
-		return yaw;
-	}
-
-	public void setYaw(float yaw) {
-		this.yaw = yaw;
-	}
-
-	public float getPitch() {
-		return pitch;
-	}
-
-	public void setPitch(float pitch) {
-		this.pitch = pitch;
-	}
-
-	public int getDestinationId() {
-		return destinationId;
-	}
-
-	public void setDestinationId(int destinationId) {
-		this.destinationId = destinationId;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public boolean contains(Location location) {
-		Vector pt = new Vector(location.getBlockX(), location.getBlockY(),
-				location.getBlockZ());
-		return getActivationRegion().contains(pt);
-	}
-
-	public void save() {
-		plugin.getDatabase().save(this);
-	}
-
-	public void delete() {
-		plugin.getDatabase().delete(this);
-	}
-
-	public static Port get(String name) {
-		return plugin.getDatabase().find(Port.class).where().ieq("name", name)
-				.findUnique();
-	}
-
-	public static List<Port> getAll() {
-		return plugin.getDatabase().find(Port.class).findList();
 	}
 
 }

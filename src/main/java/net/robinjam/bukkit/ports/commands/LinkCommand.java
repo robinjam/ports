@@ -30,14 +30,13 @@ public class LinkCommand implements CommandExecutor {
 					+ toName + "'.");
 		} else if (fromName.equals(toName)) {
 			from.setDestination(from);
-			from.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA
 					+ "Destination updated for port '" + from.getName() + "'.");
 		} else {
 			from.setDestination(to);
-			from.save();
 			to.setDestination(from);
-			to.save();
+			Port.save();
 			sender.sendMessage(ChatColor.AQUA
 					+ "Destinations updated for ports '" + from.getName()
 					+ "' and '" + to.getName() + "'.");

@@ -58,9 +58,9 @@ public class CreateCommand implements CommandExecutor {
 
 		Port port = new Port();
 		port.setName(name);
-		port.setActivationRegion((CuboidRegion) selection);
+		port.setActivationRegion(((CuboidRegion) selection).clone());
 		port.setArrivalLocation(player.getLocation());
-		port.save();
+		Port.save();
 
 		sender.sendMessage(ChatColor.AQUA
 				+ "The port was created successfully.");
