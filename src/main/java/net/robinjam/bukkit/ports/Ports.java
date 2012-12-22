@@ -13,6 +13,8 @@ import net.robinjam.bukkit.ports.commands.ScheduleCommand;
 import net.robinjam.bukkit.ports.commands.SelectCommand;
 import net.robinjam.bukkit.ports.commands.UnlinkCommand;
 import net.robinjam.bukkit.ports.commands.UpdateCommand;
+import net.robinjam.bukkit.ports.persistence.PersistentLocation;
+import net.robinjam.bukkit.ports.persistence.PersistentCuboidRegion;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandExecutor;
 import net.robinjam.bukkit.util.CommandManager;
@@ -20,6 +22,7 @@ import net.robinjam.bukkit.util.CommandManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -60,6 +63,12 @@ public class Ports extends JavaPlugin {
 				new ScheduleCommand(), new SelectCommand(this),
 				new UnlinkCommand(), new UpdateCommand(this) });
 		this.getCommand("port").setExecutor(commandManager);
+		
+		// Load port data
+		ConfigurationSerialization.registerClass(Port.class);
+		ConfigurationSerialization.registerClass(PersistentLocation.class);
+		ConfigurationSerialization.registerClass(PersistentCuboidRegion.class);
+		Port.load();
 
 		// Schedule ticket manager
 		getServer().getScheduler().scheduleSyncRepeatingTask(this,
