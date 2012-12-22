@@ -76,6 +76,8 @@ public class PlayerListener implements Listener {
 		if (port.getDestination() == null) {
 			player.sendMessage(ChatColor.YELLOW + "This "
 					+ port.getDescription() + " has no destination!");
+		} else if (port.getPermission() != null && !player.hasPermission(port.getPermission())) {
+			player.sendMessage(ChatColor.RED + "You do not have permission to use this " + port.getDescription() + ".");
 		} else {
 			if (port.getDepartureSchedule() > 0) {
 				plugin.getTicketManager().addTicket(player, port);

@@ -7,6 +7,7 @@ import net.robinjam.bukkit.ports.commands.DescribeCommand;
 import net.robinjam.bukkit.ports.commands.DestinationCommand;
 import net.robinjam.bukkit.ports.commands.LinkCommand;
 import net.robinjam.bukkit.ports.commands.ListCommand;
+import net.robinjam.bukkit.ports.commands.PermissionCommand;
 import net.robinjam.bukkit.ports.commands.ReloadCommand;
 import net.robinjam.bukkit.ports.commands.RenameCommand;
 import net.robinjam.bukkit.ports.commands.ScheduleCommand;
@@ -61,7 +62,8 @@ public class Ports extends JavaPlugin {
 				new DestinationCommand(), new LinkCommand(), new ListCommand(),
 				new ReloadCommand(this), new RenameCommand(),
 				new ScheduleCommand(), new SelectCommand(this),
-				new UnlinkCommand(), new UpdateCommand(this) });
+				new UnlinkCommand(), new UpdateCommand(this),
+				new PermissionCommand() });
 		this.getCommand("port").setExecutor(commandManager);
 		
 		// Load port data

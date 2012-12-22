@@ -92,6 +92,7 @@ public class Port implements ConfigurationSerializable {
 	private WeakReference<Port> destination = new WeakReference<Port>(null);
 	private String destinationName;
 	private int departureSchedule;
+	private String permission;
 	
 	public Port()
 	{
@@ -127,6 +128,8 @@ public class Port implements ConfigurationSerializable {
 		if (getDestination() != null)
 			result.put("destination", getDestination().getName());
 		result.put("departureSchedule", getDepartureSchedule());
+		if (getPermission() != null)
+			result.put("permission", getPermission());
 		return result;
 	}
 	
@@ -144,6 +147,8 @@ public class Port implements ConfigurationSerializable {
 		
 		result.destinationName = (String) data.get("destination");
 		result.setDepartureSchedule((Integer) data.get("departureSchedule"));
+		
+		result.setPermission((String) data.get("permission"));
 		
 		return result;
 	}
@@ -188,6 +193,14 @@ public class Port implements ConfigurationSerializable {
 	
 	public void setDepartureSchedule(int departureSchedule) {
 		this.departureSchedule = departureSchedule;
+	}
+	
+	public String getPermission() {
+		return permission;
+	}
+	
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
 
 }
