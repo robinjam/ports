@@ -60,6 +60,10 @@ public class PortTickTask implements Runnable, Listener {
 				// Check if the player is now standing in a port's activation zone
 				for (Port port : Port.getAll()) {
 					if (port.contains(player.getLocation())) {
+						// If the player is currently in a vehicle, eject them (otherwise the teleport will be unsuccessful)
+						if (player.getVehicle() != null)
+							player.getVehicle().eject();
+						
 						if (playerCanUsePort(player, port)) {
 							// If the port is an insta-port, teleport the player immediately
 							if (port.getDepartureSchedule() == 0) {
