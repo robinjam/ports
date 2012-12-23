@@ -81,10 +81,14 @@ public class Ports extends JavaPlugin {
 		ConfigurationSerialization.registerClass(PersistentLocation.class);
 		ConfigurationSerialization.registerClass(PersistentCuboidRegion.class);
 		Port.load();
+		
+		// Load config
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 
 		// Schedule ticket manager
 		getServer().getScheduler().scheduleSyncRepeatingTask(this,
-				ticketManager, 0L, 100L);
+				ticketManager, 0L, getConfig().getLong("port-tick-period"));
 	}
 
 	@Override

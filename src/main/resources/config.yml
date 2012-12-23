@@ -1,1 +1,2 @@
-# Ports default configuration file
+port-tick-period: 1
+notify-tick-period: 100

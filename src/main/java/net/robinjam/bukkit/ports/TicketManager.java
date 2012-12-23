@@ -19,6 +19,7 @@ public class TicketManager implements Runnable {
 	Map<Player, Port> tickets = new HashMap<Player, Port>();
 	Map<World, Long> previousTimes = new HashMap<World, Long>();
 	Set<Player> playersToRemove = new HashSet<Player>();
+	private long tickNumber = 1;
 
 	public void addTicket(Player player, Port port) {
 		tickets.put(player, port);
@@ -30,6 +31,8 @@ public class TicketManager implements Runnable {
 	}
 
 	public void run() {
+		long notifyPeriod = Ports.getInstance().getConfig().getLong("notify-tick-period");
+		
 		for (Player player : playersToRemove) {
 			tickets.remove(player);
 		}
@@ -60,7 +63,7 @@ public class TicketManager implements Runnable {
 					if (readyToDepart) {
 						Player player = ticket.getKey();
 						Ports.getInstance().teleportPlayer(player, port);
-					} else {
+					} else if (tickNumber == notifyPeriod) {
 						Player player = ticket.getKey();
 						long t = (port.getDepartureSchedule() - newTimes
 								.get(world) % port.getDepartureSchedule());
@@ -78,6 +81,10 @@ public class TicketManager implements Runnable {
 		}
 
 		previousTimes = newTimes;
+		if (tickNumber == notifyPeriod)
+			tickNumber = 1;
+		else
+			tickNumber++;
 	}
 
 }
