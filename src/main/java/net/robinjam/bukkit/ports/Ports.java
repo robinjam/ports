@@ -12,6 +12,7 @@ import net.robinjam.bukkit.ports.commands.ReloadCommand;
 import net.robinjam.bukkit.ports.commands.RenameCommand;
 import net.robinjam.bukkit.ports.commands.ScheduleCommand;
 import net.robinjam.bukkit.ports.commands.SelectCommand;
+import net.robinjam.bukkit.ports.commands.TicketCommand;
 import net.robinjam.bukkit.ports.commands.UnlinkCommand;
 import net.robinjam.bukkit.ports.commands.UpdateCommand;
 import net.robinjam.bukkit.ports.persistence.PersistentLocation;
@@ -73,7 +74,7 @@ public class Ports extends JavaPlugin {
 				new ReloadCommand(), new RenameCommand(),
 				new ScheduleCommand(), new SelectCommand(),
 				new UnlinkCommand(), new UpdateCommand(),
-				new PermissionCommand() });
+				new PermissionCommand(), new TicketCommand() });
 		this.getCommand("port").setExecutor(commandManager);
 		
 		// Load port data

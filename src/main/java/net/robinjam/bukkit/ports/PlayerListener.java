@@ -73,10 +73,35 @@ public class PlayerListener implements Listener {
 		} else if (port.getPermission() != null && !player.hasPermission(port.getPermission())) {
 			player.sendMessage(ChatColor.RED + "You do not have permission to use this " + port.getDescription() + ".");
 		} else {
+			if (port.getTicketItemId() != null) {
+				if (port.getTicketDataValue() != null) {
+					if (player.getItemInHand().getTypeId() != port.getTicketItemId() && player.getItemInHand().getData().getData() != port.getTicketDataValue()) {
+						player.sendMessage(ChatColor.RED + "You must be holding " + port.getTicketItemId() + ":" + port.getTicketDataValue() + " to use this " + port.getDescription() + ".");
+						return;
+					} else {
+						int heldItemAmount = player.getItemInHand().getAmount();
+						if (heldItemAmount == 1)
+							player.setItemInHand(null);
+						else
+							player.getItemInHand().setAmount(heldItemAmount - 1);
+					}
+				} else {
+					if (player.getItemInHand().getTypeId() != port.getTicketItemId()) {
+						player.sendMessage(ChatColor.RED + "You must be holding " + port.getTicketItemId() + " to use this " + port.getDescription() + ".");
+						return;
+					} else {
+						int heldItemAmount = player.getItemInHand().getAmount();
+						if (heldItemAmount == 1)
+							player.setItemInHand(null);
+						else
+							player.getItemInHand().setAmount(heldItemAmount - 1);
+					}
+				}
+			}
 			if (port.getDepartureSchedule() > 0) {
 				Ports.getInstance().getTicketManager().addTicket(player, port);
 				player.sendMessage(ChatColor.AQUA
-						+ "Welcome! Please take this ticket and wait for the "
+						+ "Welcome! Please wait for the "
 						+ port.getDescription() + " to depart.");
 			} else {
 				Ports.getInstance().teleportPlayer(player, port);
