@@ -8,7 +8,6 @@ import java.util.Set;
 import net.robinjam.bukkit.ports.persistence.Port;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -26,7 +25,8 @@ public class PortTickTask implements Runnable, Listener {
 
 	@Override
 	public void run() {
-		long notifyTickPeriod = Ports.getInstance().getConfig().getLong("notify-tick-period");
+		Ports plugin = Ports.getInstance();
+		long notifyTickPeriod = plugin.getConfig().getLong("notify-tick-period");
 		
 		// Iterate over every player on the server
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -44,7 +44,7 @@ public class PortTickTask implements Runnable, Listener {
 						}
 						// Otherwise, notify the player when the next departure will be if the notification period has elapsed
 						else if (tickNumber == notifyTickPeriod) {
-							player.sendMessage(ChatColor.AQUA + "This " + port.getDescription() + " will depart in " + formatNextDeparture(port) + ".");
+							player.sendMessage(plugin.translate("port-tick-task.notify", port.getDescription(), formatNextDeparture(port)));
 						}
 					}
 				}
@@ -52,7 +52,7 @@ public class PortTickTask implements Runnable, Listener {
 				else {
 					playerLocations.remove(player);
 					authorizedPlayers.remove(player);
-					player.sendMessage(ChatColor.AQUA + "Please come again soon!");
+					player.sendMessage(plugin.translate("port-tick-task.leave"));
 				}
 			}
 			// The player was not standing in a port's activation zone on the last port tick
@@ -74,7 +74,7 @@ public class PortTickTask implements Runnable, Listener {
 							else {
 								playerLocations.put(player, port);
 								authorizedPlayers.add(player);
-								player.sendMessage(ChatColor.AQUA + "Welcome! This " + port.getDescription() + " will depart in " + formatNextDeparture(port) + ".");
+								player.sendMessage(plugin.translate("port-tick-task.enter", port.getDescription(), formatNextDeparture(port)));
 								break;
 							}
 						} else {
@@ -116,15 +116,17 @@ public class PortTickTask implements Runnable, Listener {
 	}
 	
 	private boolean playerCanUsePort(Player player, Port port) {
+		Ports plugin = Ports.getInstance();
+		
 		// Ensure the port has a destination
 		if (port.getDestination() == null) {
-			player.sendMessage(ChatColor.YELLOW + "This " + port.getDescription() + " has no destination!");
+			player.sendMessage(plugin.translate("port-tick-task.no-destination", port.getDescription()));
 			return false;
 		}
 		
 		// Ensure the player has permission to use the port
 		if (port.getPermission() != null && !player.hasPermission(port.getPermission())) {
-			player.sendMessage(ChatColor.RED + "You do not have permission to use this " + port.getDescription() + ".");
+			player.sendMessage(plugin.translate("port-tick-task.no-permission", port.getDescription()));
 			return false;
 		}
 		
@@ -135,7 +137,7 @@ public class PortTickTask implements Runnable, Listener {
 		byte heldData = heldItem.getData().getData();
 		if (ticketItemId != null) {
 			if (heldItem.getTypeId() != ticketItemId || (ticketDataValue != null && heldData != ticketDataValue)) {
-				player.sendMessage(ChatColor.RED + "You are not holding the correct ticket to use this port.");
+				player.sendMessage(plugin.translate("port-tick-task.no-ticket", port.getDescription()));
 				return false;
 			}
 			
@@ -145,7 +147,7 @@ public class PortTickTask implements Runnable, Listener {
 				player.setItemInHand(null);
 			else
 				player.getItemInHand().setAmount(heldItemAmount - 1);
-			player.sendMessage(ChatColor.GRAY + "Your ticket has been taken.");
+			player.sendMessage(plugin.translate("port-tick-task.ticket-taken"));
 		}
 		
 		return true;
@@ -161,7 +163,7 @@ public class PortTickTask implements Runnable, Listener {
 		World world = player.getWorld();
 		Chunk chunk = world.getChunkAt(player.getLocation());
 		world.refreshChunk(chunk.getX(), chunk.getZ());
-		player.sendMessage(ChatColor.AQUA + "Whoosh!");
+		player.sendMessage(Ports.getInstance().translate("port-tick-task.depart"));
 	}
 
 }

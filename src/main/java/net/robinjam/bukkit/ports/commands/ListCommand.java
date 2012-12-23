@@ -2,11 +2,12 @@ package net.robinjam.bukkit.ports.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.robinjam.bukkit.ports.Ports;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.Command;
 import net.robinjam.bukkit.util.CommandExecutor;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -22,13 +23,14 @@ public class ListCommand implements CommandExecutor {
 		for (Port port : Port.getAll()) {
 			portNames.add(port.getName());
 		}
+		
+		Ports plugin = Ports.getInstance();
 
 		if (portNames.size() > 0) {
-			sender.sendMessage(ChatColor.YELLOW + "Available ports: "
-					+ StringUtils.join(portNames, ", "));
+			sender.sendMessage(plugin.translate("port-list", StringUtils.join(portNames, ", ")));
 		} else {
-			sender.sendMessage(ChatColor.YELLOW
-					+ "There are no ports defined yet.");
+			sender.sendMessage(plugin.translate("no-ports-defined"));
+			
 		}
 	}
 

@@ -21,6 +21,7 @@ import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandExecutor;
 import net.robinjam.bukkit.util.CommandManager;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -77,6 +78,10 @@ public class Ports extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
+	}
+	
+	public String translate(String path, Object... objs) {
+		return ChatColor.translateAlternateColorCodes('&', String.format(getConfig().getString("translations." + path), objs));
 	}
 
 }

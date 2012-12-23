@@ -1,2 +1,16 @@
 port-tick-period: 1
 notify-tick-period: 100
+
+translations:
+  port-list: "&eAvailable ports: %1$s"
+  no-ports-defined: "&eThere are no ports defined yet."
+
+  port-tick-task:
+    enter: "&bWelcome! This %1$s will depart in %2$s."
+    leave: "&bPlease come again soon!"
+    notify: "&bThis %1$s will depart in %2$s."
+    depart: "&bWhoosh!"
+    no-destination: "&eThis %1$s has no destination."
+    no-permission: "&cYou do not have permission to use this %1$s."
+    no-ticket: "&cYou do not have the ticket required to use this %1$s."
+    ticket-taken: "&7Your ticket has been taken."
