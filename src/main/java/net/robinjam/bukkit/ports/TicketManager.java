@@ -16,14 +16,9 @@ import org.bukkit.entity.Player;
  */
 public class TicketManager implements Runnable {
 
-	Ports plugin;
 	Map<Player, Port> tickets = new HashMap<Player, Port>();
 	Map<World, Long> previousTimes = new HashMap<World, Long>();
 	Set<Player> playersToRemove = new HashSet<Player>();
-
-	public TicketManager(Ports plugin) {
-		this.plugin = plugin;
-	}
 
 	public void addTicket(Player player, Port port) {
 		tickets.put(player, port);
@@ -64,7 +59,7 @@ public class TicketManager implements Runnable {
 					// If the port is ready to depart
 					if (readyToDepart) {
 						Player player = ticket.getKey();
-						plugin.teleportPlayer(player, port);
+						Ports.getInstance().teleportPlayer(player, port);
 					} else {
 						Player player = ticket.getKey();
 						long t = (port.getDepartureSchedule() - newTimes

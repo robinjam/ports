@@ -37,12 +37,22 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
  * @author robinjam
  */
 public class Ports extends JavaPlugin {
+	
+	private static Ports instance;
+	
+	public static Ports getInstance() {
+		return instance;
+	}
 
 	private CommandManager commandManager;
 	private WorldEditPlugin worldEditPlugin;
-	private PlayerListener playerListener = new PlayerListener(this);
-	private VehicleListener vehicleListener = new VehicleListener(this);
-	private TicketManager ticketManager = new TicketManager(this);
+	private PlayerListener playerListener = new PlayerListener();
+	private VehicleListener vehicleListener = new VehicleListener();
+	private TicketManager ticketManager = new TicketManager();
+	
+	public Ports() {
+		instance = this;
+	}
 
 	@Override
 	public void onEnable() {
@@ -57,12 +67,12 @@ public class Ports extends JavaPlugin {
 		// Register commands
 		commandManager = new CommandManager();
 		commandManager.registerCommands(new CommandExecutor[] {
-				new ArriveCommand(), new CreateCommand(this),
+				new ArriveCommand(), new CreateCommand(),
 				new DeleteCommand(), new DescribeCommand(),
 				new DestinationCommand(), new LinkCommand(), new ListCommand(),
-				new ReloadCommand(this), new RenameCommand(),
-				new ScheduleCommand(), new SelectCommand(this),
-				new UnlinkCommand(), new UpdateCommand(this),
+				new ReloadCommand(), new RenameCommand(),
+				new ScheduleCommand(), new SelectCommand(),
+				new UnlinkCommand(), new UpdateCommand(),
 				new PermissionCommand() });
 		this.getCommand("port").setExecutor(commandManager);
 		

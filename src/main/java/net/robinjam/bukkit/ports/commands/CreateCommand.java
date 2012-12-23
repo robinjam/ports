@@ -22,12 +22,6 @@ import org.bukkit.entity.Player;
 @Command(name = "create", usage = "[name]", permissions = "ports.create", playerOnly = true, min = 1, max = 1)
 public class CreateCommand implements CommandExecutor {
 
-	private final Ports plugin;
-
-	public CreateCommand(final Ports plugin) {
-		this.plugin = plugin;
-	}
-
 	public void onCommand(CommandSender sender, List<String> args) {
 		String name = args.get(0);
 
@@ -38,7 +32,7 @@ public class CreateCommand implements CommandExecutor {
 		}
 
 		Player player = (Player) sender;
-		LocalSession session = plugin.getWorldEdit().getSession(
+		LocalSession session = Ports.getInstance().getWorldEdit().getSession(
 				player.getName());
 		Region selection;
 		try {

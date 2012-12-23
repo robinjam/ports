@@ -23,12 +23,6 @@ import org.bukkit.entity.Player;
 @Command(name = "update", usage = "[name]", permissions = "ports.update", playerOnly = true, min = 1, max = 1)
 public class UpdateCommand implements CommandExecutor {
 
-	private final Ports plugin;
-
-	public UpdateCommand(final Ports plugin) {
-		this.plugin = plugin;
-	}
-
 	public void onCommand(CommandSender sender, List<String> args) {
 		Player player = (Player) sender;
 		Port port = Port.get(args.get(0));
@@ -40,7 +34,7 @@ public class UpdateCommand implements CommandExecutor {
 					+ "That port is in a different world ('" + port.getWorld()
 					+ "').");
 		} else {
-			WorldEdit worldEdit = plugin.getWorldEdit();
+			WorldEdit worldEdit = Ports.getInstance().getWorldEdit();
 			LocalSession session = worldEdit.getSession(player.getName());
 			Region selection;
 			try {

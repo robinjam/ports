@@ -16,14 +16,8 @@ import org.bukkit.command.CommandSender;
 @Command(name = "reload", permissions = "ports.reload")
 public class ReloadCommand implements CommandExecutor {
 
-	private final Ports plugin;
-
-	public ReloadCommand(final Ports plugin) {
-		this.plugin = plugin;
-	}
-
 	public void onCommand(CommandSender sender, List<String> args) {
-		plugin.reloadConfig();
+		Ports.getInstance().reloadConfig();
 		Port.load();
 		sender.sendMessage(ChatColor.AQUA + "Ports configuration reloaded");
 	}

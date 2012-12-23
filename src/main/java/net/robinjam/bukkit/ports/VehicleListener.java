@@ -12,12 +12,6 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
  */
 class VehicleListener implements Listener {
 
-	private Ports plugin;
-
-	public VehicleListener(Ports plugin) {
-		this.plugin = plugin;
-	}
-
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onVehicleEnter(VehicleEnterEvent event) {
 		if (event.isCancelled() || !(event.getEntered() instanceof Player))
@@ -25,7 +19,7 @@ class VehicleListener implements Listener {
 
 		Player player = (Player) event.getEntered();
 
-		plugin.getTicketManager().removeTicket(player);
+		Ports.getInstance().getTicketManager().removeTicket(player);
 	}
 
 }

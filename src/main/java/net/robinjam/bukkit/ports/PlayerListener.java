@@ -21,13 +21,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  */
 public class PlayerListener implements Listener {
 
-	private Ports plugin;
-
 	private Map<Player, Port> playerLocations = new HashMap<Player, Port>();
-
-	public PlayerListener(Ports plugin) {
-		this.plugin = plugin;
-	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerMove(PlayerMoveEvent event) {
@@ -69,7 +63,7 @@ public class PlayerListener implements Listener {
 			return;
 
 		Player player = event.getPlayer();
-		plugin.getTicketManager().removeTicket(player);
+		Ports.getInstance().getTicketManager().removeTicket(player);
 	}
 
 	private void onPlayerEnterPort(Player player, Port port) {
@@ -80,18 +74,18 @@ public class PlayerListener implements Listener {
 			player.sendMessage(ChatColor.RED + "You do not have permission to use this " + port.getDescription() + ".");
 		} else {
 			if (port.getDepartureSchedule() > 0) {
-				plugin.getTicketManager().addTicket(player, port);
+				Ports.getInstance().getTicketManager().addTicket(player, port);
 				player.sendMessage(ChatColor.AQUA
 						+ "Welcome! Please take this ticket and wait for the "
 						+ port.getDescription() + " to depart.");
 			} else {
-				plugin.teleportPlayer(player, port);
+				Ports.getInstance().teleportPlayer(player, port);
 			}
 		}
 	}
 
 	private void onPlayerLeavePort(Player player, Port port) {
-		plugin.getTicketManager().removeTicket(player);
+		Ports.getInstance().getTicketManager().removeTicket(player);
 		player.sendMessage(ChatColor.AQUA + "Please come again soon!");
 	}
 

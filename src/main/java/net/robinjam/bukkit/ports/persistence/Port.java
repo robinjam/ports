@@ -51,7 +51,7 @@ public class Port implements ConfigurationSerializable {
 		YamlConfiguration config = new YamlConfiguration();
 		config.set("ports", new ArrayList<Port>(ports));
 		
-		Ports plugin = (Ports) Bukkit.getPluginManager().getPlugin("Ports");
+		Ports plugin = Ports.getInstance();
 		File file = new File(plugin.getDataFolder(), "ports.yml");
 		try {
 			config.save(file);
@@ -64,8 +64,7 @@ public class Port implements ConfigurationSerializable {
 	@SuppressWarnings("unchecked")
 	public static void load() {
 		// Load the ports.yml file from the plugin's data folder
-		Ports plugin = (Ports) Bukkit.getPluginManager().getPlugin("Ports");
-		File file = new File(plugin.getDataFolder(), "ports.yml");
+		File file = new File(Ports.getInstance().getDataFolder(), "ports.yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		
 		// Load the port data

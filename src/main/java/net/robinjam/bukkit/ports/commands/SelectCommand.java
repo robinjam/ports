@@ -18,12 +18,6 @@ import org.bukkit.entity.Player;
 @Command(name = "select", usage = "[name]", permissions = "ports.select", playerOnly = true, min = 1, max = 1)
 public class SelectCommand implements CommandExecutor {
 
-	private final Ports plugin;
-
-	public SelectCommand(final Ports plugin) {
-		this.plugin = plugin;
-	}
-
 	public void onCommand(CommandSender sender, List<String> args) {
 		Player player = (Player) sender;
 		Port port = Port.get(args.get(0));
@@ -38,7 +32,7 @@ public class SelectCommand implements CommandExecutor {
 			CuboidSelection selection = new CuboidSelection(player.getWorld(),
 					port.getActivationRegion().getPos1(), port
 							.getActivationRegion().getPos2());
-			plugin.getWorldEditPlugin().setSelection(player, selection);
+			Ports.getInstance().getWorldEditPlugin().setSelection(player, selection);
 			sender.sendMessage(ChatColor.AQUA + "Activation region selected.");
 		}
 	}
