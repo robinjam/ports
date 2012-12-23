@@ -7,7 +7,6 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import java.util.List;
-import net.robinjam.bukkit.ports.Ports;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.Command;
 import net.robinjam.bukkit.util.CommandExecutor;
@@ -34,7 +33,7 @@ public class UpdateCommand implements CommandExecutor {
 					+ "That port is in a different world ('" + port.getWorld()
 					+ "').");
 		} else {
-			WorldEdit worldEdit = Ports.getInstance().getWorldEdit();
+			WorldEdit worldEdit = WorldEdit.getInstance();
 			LocalSession session = worldEdit.getSession(player.getName());
 			Region selection;
 			try {

@@ -2,11 +2,11 @@ package net.robinjam.bukkit.ports.commands;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import java.util.List;
-import net.robinjam.bukkit.ports.Ports;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.Command;
 import net.robinjam.bukkit.util.CommandExecutor;
@@ -32,7 +32,7 @@ public class CreateCommand implements CommandExecutor {
 		}
 
 		Player player = (Player) sender;
-		LocalSession session = Ports.getInstance().getWorldEdit().getSession(
+		LocalSession session = WorldEdit.getInstance().getSession(
 				player.getName());
 		Region selection;
 		try {

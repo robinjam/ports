@@ -22,11 +22,7 @@ import net.robinjam.bukkit.util.CommandExecutor;
 import net.robinjam.bukkit.util.CommandManager;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 /**
  * 
@@ -41,7 +37,6 @@ public class Ports extends JavaPlugin {
 	}
 
 	private CommandManager commandManager;
-	private WorldEditPlugin worldEditPlugin;
 	private PortTickTask portTickTask = new PortTickTask();
 	
 	public Ports() {
@@ -50,9 +45,6 @@ public class Ports extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		// Hook into WorldEdit
-		this.hookWorldEdit();
-
 		// Register events
 		getServer().getPluginManager().registerEvents(portTickTask, this);
 
@@ -85,20 +77,6 @@ public class Ports extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
-	}
-
-	private void hookWorldEdit() {
-		Plugin plugin = this.getServer().getPluginManager()
-				.getPlugin("WorldEdit");
-		this.worldEditPlugin = (WorldEditPlugin) plugin;
-	}
-
-	public WorldEditPlugin getWorldEditPlugin() {
-		return this.worldEditPlugin;
-	}
-
-	public WorldEdit getWorldEdit() {
-		return this.worldEditPlugin.getWorldEdit();
 	}
 
 }

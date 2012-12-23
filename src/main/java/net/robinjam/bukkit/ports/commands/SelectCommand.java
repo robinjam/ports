@@ -1,11 +1,13 @@
 package net.robinjam.bukkit.ports.commands;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import java.util.List;
-import net.robinjam.bukkit.ports.Ports;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.Command;
 import net.robinjam.bukkit.util.CommandExecutor;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,7 +34,8 @@ public class SelectCommand implements CommandExecutor {
 			CuboidSelection selection = new CuboidSelection(player.getWorld(),
 					port.getActivationRegion().getPos1(), port
 							.getActivationRegion().getPos2());
-			Ports.getInstance().getWorldEditPlugin().setSelection(player, selection);
+			WorldEditPlugin worldEdit = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+			worldEdit.setSelection(player, selection);
 			sender.sendMessage(ChatColor.AQUA + "Activation region selected.");
 		}
 	}
