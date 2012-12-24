@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "describe", usage = "[name] [description]", permissions = "ports.describe", min = 2, max = -1)
+@Command(name = "describe", usage = "[name] <description>", permissions = "ports.describe", min = 1, max = -1)
 public class DescribeCommand implements CommandExecutor {
 
 	public void onCommand(CommandSender sender, List<String> args) {
@@ -22,10 +22,14 @@ public class DescribeCommand implements CommandExecutor {
 		if (port == null) {
 			sender.sendMessage(ChatColor.RED + "There is no such port.");
 		} else {
-			port.setDescription(StringUtils.join(args.subList(1, args.size()),
-					" "));
+			if (args.size() < 2) {
+				port.setDescription(null);
+				sender.sendMessage(ChatColor.AQUA + "Description removed.");
+			} else {
+				port.setDescription(StringUtils.join(args.subList(1, args.size()), " "));
+				sender.sendMessage(ChatColor.AQUA + "Description updated.");
+			}
 			Port.save();
-			sender.sendMessage(ChatColor.AQUA + "Description updated.");
 		}
 	}
 

@@ -119,6 +119,16 @@ public class Port implements ConfigurationSerializable {
 		this.departureSchedule = departureSchedule;
 	}
 	
+	public String getDescription() {
+		return description == null ? "port" : description;
+	}
+	
+	public void setDescription(String description) {
+		if ("port".equals(description))
+			description = null;
+		this.description = description;
+	}
+	
 	public String getWorld() {
 		return getArrivalLocation().getWorld().getName();
 	}
@@ -128,7 +138,8 @@ public class Port implements ConfigurationSerializable {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("name", getName());
 		result.put("world", getWorld());
-		result.put("description", getDescription());
+		if (description != null)
+			result.put("description", description);
 		result.put("activationRegion", new PersistentCuboidRegion(getActivationRegion()));
 		result.put("arrivalLocation", new PersistentLocation(getArrivalLocation()));
 		if (getDestination() != null)
@@ -174,14 +185,6 @@ public class Port implements ConfigurationSerializable {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	
 	public CuboidRegion getActivationRegion() {
