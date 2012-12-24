@@ -90,7 +90,7 @@ public class Port implements ConfigurationSerializable {
 	private Location arrivalLocation;
 	private WeakReference<Port> destination = new WeakReference<Port>(null);
 	private String destinationName;
-	private int departureSchedule;
+	private Integer departureSchedule;
 	private String permission;
 	private Integer ticketItemId, ticketDataValue;
 	
@@ -113,6 +113,12 @@ public class Port implements ConfigurationSerializable {
 		this.destination = new WeakReference<Port>(destination);
 	}
 	
+	public void setDepartureSchedule(Integer departureSchedule) {
+		if (departureSchedule!= null && departureSchedule == 0)
+			departureSchedule = null;
+		this.departureSchedule = departureSchedule;
+	}
+	
 	public String getWorld() {
 		return getArrivalLocation().getWorld().getName();
 	}
@@ -127,7 +133,8 @@ public class Port implements ConfigurationSerializable {
 		result.put("arrivalLocation", new PersistentLocation(getArrivalLocation()));
 		if (getDestination() != null)
 			result.put("destination", getDestination().getName());
-		result.put("departureSchedule", getDepartureSchedule());
+		if (getDepartureSchedule() != null)
+			result.put("departureSchedule", getDepartureSchedule());
 		if (getPermission() != null)
 			result.put("permission", getPermission());
 		if (getTicketItemId() != null)
@@ -193,12 +200,8 @@ public class Port implements ConfigurationSerializable {
 		this.arrivalLocation = arrivalLocation;
 	}
 	
-	public int getDepartureSchedule() {
+	public Integer getDepartureSchedule() {
 		return departureSchedule;
-	}
-	
-	public void setDepartureSchedule(int departureSchedule) {
-		this.departureSchedule = departureSchedule;
 	}
 	
 	public String getPermission() {

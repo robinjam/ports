@@ -66,7 +66,7 @@ public class PortTickTask implements Runnable, Listener {
 						
 						if (playerCanUsePort(player, port)) {
 							// If the port is an insta-port, teleport the player immediately
-							if (port.getDepartureSchedule() == 0) {
+							if (port.getDepartureSchedule() == null) {
 								teleportPlayer(player, port);
 								break;
 							}

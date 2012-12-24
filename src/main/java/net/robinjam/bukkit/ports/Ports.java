@@ -74,6 +74,9 @@ public class Ports extends JavaPlugin {
 		ConfigurationSerialization.registerClass(PersistentLocation.class);
 		ConfigurationSerialization.registerClass(PersistentCuboidRegion.class);
 		Port.load();
+		
+		// Save port data so that when the schema is changed the port data migrates automatically
+		Port.save();
 
 		// Load config
 		getConfig().options().copyDefaults(true);
