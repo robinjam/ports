@@ -1,5 +1,7 @@
 package net.robinjam.bukkit.ports;
 
+import java.io.IOException;
+
 import net.robinjam.bukkit.ports.commands.ArriveCommand;
 import net.robinjam.bukkit.ports.commands.CreateCommand;
 import net.robinjam.bukkit.ports.commands.DeleteCommand;
@@ -24,6 +26,7 @@ import net.robinjam.bukkit.util.CommandManager;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 /**
  * 
@@ -70,6 +73,14 @@ public class Ports extends JavaPlugin {
 		// Load config
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+
+		// Enable plugin metrics
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    getLogger().warning("Unable to start plugin metrics.");
+		}
 
 		// Schedule ticket manager
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, portTickTask, 0L, getConfig().getLong("port-tick-period"));
