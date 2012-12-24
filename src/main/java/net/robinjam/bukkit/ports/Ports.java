@@ -2,23 +2,9 @@ package net.robinjam.bukkit.ports;
 
 import java.io.IOException;
 
-import net.robinjam.bukkit.ports.commands.ArriveCommand;
-import net.robinjam.bukkit.ports.commands.CreateCommand;
-import net.robinjam.bukkit.ports.commands.DeleteCommand;
-import net.robinjam.bukkit.ports.commands.DescribeCommand;
-import net.robinjam.bukkit.ports.commands.DestinationCommand;
-import net.robinjam.bukkit.ports.commands.LinkCommand;
-import net.robinjam.bukkit.ports.commands.ListCommand;
-import net.robinjam.bukkit.ports.commands.PermissionCommand;
-import net.robinjam.bukkit.ports.commands.ReloadCommand;
-import net.robinjam.bukkit.ports.commands.RenameCommand;
-import net.robinjam.bukkit.ports.commands.ScheduleCommand;
-import net.robinjam.bukkit.ports.commands.SelectCommand;
-import net.robinjam.bukkit.ports.commands.TicketCommand;
-import net.robinjam.bukkit.ports.commands.UnlinkCommand;
-import net.robinjam.bukkit.ports.commands.UpdateCommand;
-import net.robinjam.bukkit.ports.persistence.PersistentLocation;
+import net.robinjam.bukkit.ports.commands.*;
 import net.robinjam.bukkit.ports.persistence.PersistentCuboidRegion;
+import net.robinjam.bukkit.ports.persistence.PersistentLocation;
 import net.robinjam.bukkit.ports.persistence.Port;
 import net.robinjam.bukkit.util.CommandExecutor;
 import net.robinjam.bukkit.util.CommandManager;
@@ -29,57 +15,76 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 /**
+ * The main plugin class, and translation provider for all other classes.
  * 
  * @author robinjam
  */
 public class Ports extends JavaPlugin {
-	
+
+	// The singleton instance
 	private static Ports instance;
-	
+
+	/**
+	 * @return The singleton instance.
+	 */
 	public static Ports getInstance() {
 		return instance;
 	}
 
-	private CommandManager commandManager;
+	// Handles dispatching commands to command handlers
+	private CommandManager commandManager = new CommandManager();
+
+	// Handles synchronously processing port ticks and notifications
 	private PortTickTask portTickTask = new PortTickTask();
-	
+
+	/**
+	 * Constructs a new instance and sets the singleton instance of this plugin
+	 * to the newly created instance.
+	 */
 	public Ports() {
+		commandManager.registerCommands(new CommandExecutor[] {
+			new ArriveCommand(),
+			new CreateCommand(),
+			new DeleteCommand(),
+			new DescribeCommand(),
+			new DestinationCommand(),
+			new LinkCommand(),
+			new ListCommand(),
+			new PermissionCommand(),
+			new ReloadCommand(),
+			new RenameCommand(),
+			new ScheduleCommand(),
+			new SelectCommand(),
+			new TicketCommand(),
+			new UnlinkCommand(),
+			new UpdateCommand()
+		});
+
 		instance = this;
 	}
 
 	@Override
 	public void onEnable() {
-		// Register events
+		// Register events and commands
 		getServer().getPluginManager().registerEvents(portTickTask, this);
-
-		// Register commands
-		commandManager = new CommandManager();
-		commandManager.registerCommands(new CommandExecutor[] {
-				new ArriveCommand(), new CreateCommand(),
-				new DeleteCommand(), new DescribeCommand(),
-				new DestinationCommand(), new LinkCommand(), new ListCommand(),
-				new ReloadCommand(), new RenameCommand(),
-				new ScheduleCommand(), new SelectCommand(),
-				new UnlinkCommand(), new UpdateCommand(),
-				new PermissionCommand(), new TicketCommand() });
 		this.getCommand("port").setExecutor(commandManager);
-		
+
 		// Load port data
 		ConfigurationSerialization.registerClass(Port.class);
 		ConfigurationSerialization.registerClass(PersistentLocation.class);
 		ConfigurationSerialization.registerClass(PersistentCuboidRegion.class);
 		Port.load();
-		
+
 		// Load config
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 
 		// Enable plugin metrics
 		try {
-		    Metrics metrics = new Metrics(this);
-		    metrics.start();
+			Metrics metrics = new Metrics(this);
+			metrics.start();
 		} catch (IOException e) {
-		    getLogger().warning("Unable to start plugin metrics.");
+			getLogger().warning("Unable to start plugin metrics.");
 		}
 
 		// Schedule ticket manager
@@ -88,9 +93,23 @@ public class Ports extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		// Cancel all scheduled tasks for this plugin
 		getServer().getScheduler().cancelTasks(this);
 	}
-	
+
+	/**
+	 * Translates the string by loading the string from config path
+	 * "translations.[path]". The translated string is then formatted using the
+	 * given objects. Colour codes beginning with the '&' symbol are also
+	 * translated to the format Minecraft expects.
+	 * 
+	 * @param path
+	 *            The localization key.
+	 * @param objs
+	 *            A variable number of objects to be passed to the string
+	 *            formatter.
+	 * @return The translated, formatted string with colour codes expanded.
+	 */
 	public String translate(String path, Object... objs) {
 		return ChatColor.translateAlternateColorCodes('&', String.format(getConfig().getString("translations." + path), objs));
 	}
