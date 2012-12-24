@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks the annotated method as a command.
+ * Marks the annotated class as a command executor.
  * 
  * @author robinjam
  */
@@ -20,9 +20,8 @@ public @interface Command {
 	String name();
 
 	/**
-	 * The text that should be appended to appended to "/port commandname " in
-	 * order to produce usage instructions. Example:
-	 * <code>[name] [description]</code>
+	 * The text that should be appended to "/port commandname " in order to
+	 * produce usage instructions. Example: <code>[name] [description]</code>
 	 */
 	String usage() default "";
 
