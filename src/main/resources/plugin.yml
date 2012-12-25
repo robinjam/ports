@@ -27,6 +27,7 @@ permissions:
       ports.unlink: true
       ports.rename: true
       ports.permission: true
+      ports.ticket: true
       
   ports.reload:
     description: Allows you to use /port reload
@@ -66,6 +67,9 @@ permissions:
 
   ports.permission:
     description: Allows you to use /port permission
+
+  ports.ticket:
+    description: Allows you to use /port ticket
   
   ports.list:
     description: Allows you to use /port list
