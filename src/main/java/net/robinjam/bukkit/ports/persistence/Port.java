@@ -94,6 +94,7 @@ public class Port implements ConfigurationSerializable {
 	private String permission;
 	private Integer ticketItemId, ticketDataValue;
 	private String worldName;
+	private Integer cooldown;
 	
 	public Port()
 	{
@@ -160,6 +161,8 @@ public class Port implements ConfigurationSerializable {
 			result.put("ticketItemId", getTicketItemId());
 		if (getTicketDataValue() != null)
 			result.put("ticketDataValue", getTicketDataValue());
+		if (getCooldown() != null)
+			result.put("cooldown", getCooldown());
 		return result;
 	}
 	
@@ -182,6 +185,7 @@ public class Port implements ConfigurationSerializable {
 		result.setPermission((String) data.get("permission"));
 		result.setTicketItemId((Integer) data.get("ticketItemId"));
 		result.setTicketDataValue((Integer) data.get("ticketDataValue"));
+		result.setCooldown((Integer) data.get("cooldown"));
 		
 		return result;
 	}
@@ -234,6 +238,14 @@ public class Port implements ConfigurationSerializable {
 	
 	public void setTicketDataValue(Integer ticketDataValue) {
 		this.ticketDataValue = ticketDataValue;
+	}
+	
+	public Integer getCooldown() {
+		return cooldown;
+	}
+	
+	public void setCooldown(Integer cooldown) {
+		this.cooldown = cooldown;
 	}
 
 }

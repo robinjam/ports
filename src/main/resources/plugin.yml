@@ -28,6 +28,7 @@ permissions:
       ports.rename: true
       ports.permission: true
       ports.ticket: true
+      ports.cooldown: true
       
   ports.reload:
     description: Allows you to use /port reload
@@ -70,6 +71,9 @@ permissions:
 
   ports.ticket:
     description: Allows you to use /port ticket
+
+  ports.cooldown:
+    description: Allows you to use /port cooldown
   
   ports.list:
     description: Allows you to use /port list

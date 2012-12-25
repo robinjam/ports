@@ -14,3 +14,4 @@ translations:
     no-permission: "&cYou do not have permission to use this %1$s."
     no-ticket: "&cYou do not have the ticket required to use this %1$s."
     ticket-taken: "&7Your ticket has been taken."
+    cooldown: "&cYou must wait a further %1$s before you can use a port again."

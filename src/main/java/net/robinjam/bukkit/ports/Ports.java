@@ -44,6 +44,7 @@ public class Ports extends JavaPlugin {
 	public Ports() {
 		commandManager.registerCommands(new CommandExecutor[] {
 			new ArriveCommand(),
+			new CooldownCommand(),
 			new CreateCommand(),
 			new DeleteCommand(),
 			new DescribeCommand(),

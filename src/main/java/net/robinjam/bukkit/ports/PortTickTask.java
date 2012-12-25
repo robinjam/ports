@@ -2,6 +2,7 @@ package net.robinjam.bukkit.ports;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,12 +21,14 @@ import org.bukkit.inventory.ItemStack;
 public class PortTickTask implements Runnable, Listener {
 	
 	private Map<Player, Port> playerLocations = new HashMap<Player, Port>();
+	private Map<Player, Integer> playerCooldowns = new HashMap<Player, Integer>();
 	private Set<Player> authorizedPlayers = new HashSet<Player>();
 	private long tickNumber = 1;
 
 	@Override
 	public void run() {
 		Ports plugin = Ports.getInstance();
+		long portTickPeriod = plugin.getConfig().getLong("port-tick-period");
 		long notifyTickPeriod = plugin.getConfig().getLong("notify-tick-period");
 		
 		// Iterate over every player on the server
@@ -91,6 +94,18 @@ public class PortTickTask implements Runnable, Listener {
 			tickNumber = 1;
 		else
 			++tickNumber;
+		
+		// Update player cooldowns
+		Iterator<Map.Entry<Player, Integer>> it = playerCooldowns.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Player, Integer> entry = it.next();
+			int cooldown = entry.getValue();
+			cooldown -= portTickPeriod;
+			if (cooldown > 0)
+				entry.setValue(cooldown);
+			else
+				it.remove();
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -103,9 +118,13 @@ public class PortTickTask implements Runnable, Listener {
 	
 	private String formatNextDeparture(Port port) {
 		long t = port.getDepartureSchedule() - Bukkit.getWorld(port.getWorld()).getFullTime() % port.getDepartureSchedule();
-		long d = t / 24000;
-		long h = (t % 24000) / 1000;
-		long m = ((t % 24000) % 1000) / 16;
+		return formatTime(t);
+	}
+	
+	private String formatTime(long time) {
+		long d = time / 24000;
+		long h = (time % 24000) / 1000;
+		long m = ((time % 24000) % 1000) / 16;
 		return String.format("[%dd %dh %dm]", d, h, m);
 	}
 	
@@ -117,6 +136,13 @@ public class PortTickTask implements Runnable, Listener {
 	
 	private boolean playerCanUsePort(Player player, Port port) {
 		Ports plugin = Ports.getInstance();
+		
+		// Ensure the player is not on cooldown
+		Integer cooldown = playerCooldowns.get(player);
+		if (cooldown != null) {
+			player.sendMessage(plugin.translate("port-tick-task.cooldown", formatTime(cooldown)));
+			return false;
+		}
 		
 		// Ensure the port has a destination
 		if (port.getDestination() == null) {
@@ -164,6 +190,10 @@ public class PortTickTask implements Runnable, Listener {
 		Chunk chunk = world.getChunkAt(player.getLocation());
 		world.refreshChunk(chunk.getX(), chunk.getZ());
 		player.sendMessage(Ports.getInstance().translate("port-tick-task.depart"));
+		
+		// If the port has a cooldown, add the player to the cooldown list
+		if (port.getCooldown() != null)
+			playerCooldowns.put(player, port.getCooldown());
 	}
 
 }
