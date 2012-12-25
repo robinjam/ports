@@ -93,6 +93,7 @@ public class Port implements ConfigurationSerializable {
 	private Integer departureSchedule;
 	private String permission;
 	private Integer ticketItemId, ticketDataValue;
+	private String worldName;
 	
 	public Port()
 	{
@@ -128,9 +129,16 @@ public class Port implements ConfigurationSerializable {
 			description = null;
 		this.description = description;
 	}
+
+	public void setArrivalLocation(Location arrivalLocation) {
+		this.arrivalLocation = arrivalLocation;
+		World world = arrivalLocation.getWorld();
+		if (world != null)
+			this.worldName = world.getName();
+	}
 	
 	public String getWorld() {
-		return getArrivalLocation().getWorld().getName();
+		return worldName;
 	}
 
 	@Override
@@ -163,7 +171,8 @@ public class Port implements ConfigurationSerializable {
 		PersistentCuboidRegion activationRegion = (PersistentCuboidRegion) data.get("activationRegion");
 		result.setActivationRegion(activationRegion.getRegion());
 		
-		World world = Bukkit.getWorld((String) data.get("world"));
+		result.worldName = (String) data.get("world");
+		World world = Bukkit.getWorld(result.worldName);
 		PersistentLocation arrivalLocation = (PersistentLocation) data.get("arrivalLocation");
 		result.setArrivalLocation(arrivalLocation.getLocation(world));
 		
@@ -197,10 +206,6 @@ public class Port implements ConfigurationSerializable {
 	
 	public Location getArrivalLocation() {
 		return arrivalLocation;
-	}
-	
-	public void setArrivalLocation(Location arrivalLocation) {
-		this.arrivalLocation = arrivalLocation;
 	}
 	
 	public Integer getDepartureSchedule() {
