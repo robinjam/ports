@@ -12,28 +12,33 @@ import org.bukkit.command.CommandSender;
  * 
  * @author robinjam
  */
-@Command(name = "destination", usage = "[from] [to]", permissions = "ports.destination", min = 2, max = 2)
+@Command(name = "destination", usage = "[from] <to>", permissions = "ports.destination", min = 1, max = 2)
 public class DestinationCommand implements CommandExecutor {
 
 	public void onCommand(CommandSender sender, List<String> args) {
 		String fromName = args.get(0);
-		String toName = args.get(1);
-
 		Port from = Port.get(fromName);
-		Port to = Port.get(toName);
-
+		
 		if (from == null) {
-			sender.sendMessage(ChatColor.RED + "There is no port named '"
-					+ fromName + "'.");
-		} else if (to == null) {
-			sender.sendMessage(ChatColor.RED + "There is no port named '"
-					+ toName + "'.");
-		} else {
-			from.setDestination(to);
-			Port.save();
-			sender.sendMessage(ChatColor.AQUA
-					+ "Destination updated for port '" + fromName + "'.");
+			sender.sendMessage(ChatColor.RED + "There is no port named '" + fromName + "'.");
+			return;
 		}
+		
+		if (args.size() == 1) {
+			from.setDestination(null);
+			sender.sendMessage(ChatColor.AQUA + "Destination removed for port '" + fromName + "'.");
+		} else {
+			String toName = args.get(1);
+			Port to = Port.get(toName);
+			
+			if (to == null) {
+				sender.sendMessage(ChatColor.RED + "There is no port named '" + toName + "'.");
+			} else {
+				from.setDestination(to);
+				sender.sendMessage(ChatColor.AQUA + "Destination updated for port '" + fromName + "'.");
+			}
+		}
+		Port.save();
 	}
 
 }
