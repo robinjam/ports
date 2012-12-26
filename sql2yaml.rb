@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'rubygems'
 require 'sqlite3'
 
 if ARGV.length != 1
