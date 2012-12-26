@@ -41,7 +41,12 @@ public class PortTickTask implements Runnable, Listener {
 					if (authorizedPlayers.contains(player)) {
 						// If it's time for the port to depart, teleport the player
 						if (portShouldDepart(port)) {
-							teleportPlayer(player, port);
+							teleportPlayer(player, port.getDestination());
+							
+							// If the port has a cooldown, add the player to the cooldown list
+							if (port.getCooldown() != null)
+								playerCooldowns.put(player, port.getCooldown());
+							
 							playerLocations.remove(player);
 							authorizedPlayers.remove(player);
 						}
@@ -70,7 +75,12 @@ public class PortTickTask implements Runnable, Listener {
 						if (playerCanUsePort(player, port)) {
 							// If the port is an insta-port, teleport the player immediately
 							if (port.getDepartureSchedule() == null) {
-								teleportPlayer(player, port);
+								teleportPlayer(player, port.getDestination());
+								
+								// If the port has a cooldown, add the player to the cooldown list
+								if (port.getCooldown() != null)
+									playerCooldowns.put(player, port.getCooldown());
+								
 								break;
 							}
 							// Otherwise, add them to the player location tracker
@@ -179,8 +189,8 @@ public class PortTickTask implements Runnable, Listener {
 		return true;
 	}
 	
-	private void teleportPlayer(Player player, Port port) {
-		player.teleport(port.getDestination().getArrivalLocation());
+	public static void teleportPlayer(Player player, Port port) {
+		player.teleport(port.getArrivalLocation());
 
 		// Reset the player's fall distance so they don't take fall damage
 		player.setFallDistance(0.0f);
@@ -190,10 +200,6 @@ public class PortTickTask implements Runnable, Listener {
 		Chunk chunk = world.getChunkAt(player.getLocation());
 		world.refreshChunk(chunk.getX(), chunk.getZ());
 		player.sendMessage(Ports.getInstance().translate("port-tick-task.depart"));
-		
-		// If the port has a cooldown, add the player to the cooldown list
-		if (port.getCooldown() != null)
-			playerCooldowns.put(player, port.getCooldown());
 	}
 
 }
