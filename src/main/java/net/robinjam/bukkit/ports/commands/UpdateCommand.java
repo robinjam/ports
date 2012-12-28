@@ -35,6 +35,12 @@ public class UpdateCommand implements CommandExecutor {
 		} else {
 			WorldEdit worldEdit = WorldEdit.getInstance();
 			LocalSession session = worldEdit.getSession(player.getName());
+			if (session == null) {
+				sender.sendMessage(ChatColor.RED
+						+ "Please select the activation area using WorldEdit first.");
+				return;
+			}
+			
 			Region selection;
 			try {
 				selection = session.getSelection(new BukkitWorld(player

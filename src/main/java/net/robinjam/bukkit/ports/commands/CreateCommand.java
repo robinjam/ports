@@ -34,6 +34,12 @@ public class CreateCommand implements CommandExecutor {
 		Player player = (Player) sender;
 		LocalSession session = WorldEdit.getInstance().getSession(
 				player.getName());
+		if (session == null) {
+			sender.sendMessage(ChatColor.RED
+					+ "Please select the activation area using WorldEdit first.");
+			return;
+		}
+		
 		Region selection;
 		try {
 			selection = session
