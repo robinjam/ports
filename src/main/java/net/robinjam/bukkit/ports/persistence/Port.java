@@ -95,6 +95,7 @@ public class Port implements ConfigurationSerializable {
 	private Integer ticketItemId, ticketDataValue;
 	private String worldName;
 	private Integer cooldown;
+	private Double price;
 	
 	public Port()
 	{
@@ -163,6 +164,8 @@ public class Port implements ConfigurationSerializable {
 			result.put("ticketDataValue", getTicketDataValue());
 		if (getCooldown() != null)
 			result.put("cooldown", getCooldown());
+		if (getPrice() != null)
+			result.put("price", getPrice());
 		return result;
 	}
 	
@@ -186,6 +189,7 @@ public class Port implements ConfigurationSerializable {
 		result.setTicketItemId((Integer) data.get("ticketItemId"));
 		result.setTicketDataValue((Integer) data.get("ticketDataValue"));
 		result.setCooldown((Integer) data.get("cooldown"));
+		result.setPrice((Double) data.get("price"));
 		
 		return result;
 	}
@@ -246,6 +250,14 @@ public class Port implements ConfigurationSerializable {
 	
 	public void setCooldown(Integer cooldown) {
 		this.cooldown = cooldown;
+	}
+	
+	public Double getPrice() {
+		return price;
+	}
+	
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 }
