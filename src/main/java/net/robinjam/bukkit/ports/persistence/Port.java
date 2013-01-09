@@ -104,7 +104,7 @@ public class Port implements ConfigurationSerializable {
 	
 	public boolean contains(Location location) {
 		Vector vec = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-		return activationRegion.contains(vec);
+		return location.getWorld().getName().equals(getWorld()) && activationRegion.contains(vec);
 	}
 	
 	public Port getDestination() {
